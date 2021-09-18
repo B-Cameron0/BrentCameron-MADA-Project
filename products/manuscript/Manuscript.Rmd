@@ -1,7 +1,7 @@
 ---
-title: "Example Manuscript Template for a Data Analysis Project"
-subtitle: ""
-author: Andreas Handel
+title: "Data Analysis COVID-19 Deaths and Geographical Distribution "
+subtitle: "Examining COVID Through Geographical Differences "
+author: Brent Cameron
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 documentclass: article
@@ -15,11 +15,11 @@ bibliography: ../references.bib
 csl: ../apa.csl
 ---
 
-The structure below is a possible setup for a data analysis project (including the course project). For a manuscript, adjust as needed.
-
 
 # Summary/Abstract
 _Write a summary of your project._
+
+I will analyze data to further understand trend of COVID-19 deaths in the United States using geographical data from the CDC open database. The goal of this project is to understand the role that age group, geography, ethnicity, and underlying conditions play in the overall spread, managment, and handling of COVID-19. This project will hopefully shed further light into what could be the best targeted approaches for minimizing disease burden for similar diseases in the future.
 
 
 # Introduction 
@@ -27,11 +27,29 @@ _Write a summary of your project._
 ## General Background Information
 _Provide enough background on your topic that others can understand the why and how of your analysis_ 
 
+The word Coronavirus has grown from a seemingly harmless word for a virus that can create cold and flu-like symptoms, to one of the most recognizable and fear-inducing words worldwide in the sphere of disease. COVID-19 has been responsible for simultaneously one of the most prevalent worldwide pandemics in decades, and one of the most intricate and complex systems of partnerships, vaccination campaigns, and mobilizations to stop the disease worldwide. Because of the vast scope of this virus, resources and networks have been tested, created, and managed, often in completely new areas and capacities. While a multitude of research has already been conducted on COVID-19, including dealing with a variety of recent strains such as Alpha, Delta, and most recently, Mu, understnading the differences in how the disease continues to affect and interact with different populations can serve as an invaluable resource in tailoring new innovative strategies to combat the virus.
+
 ## Description of data and data source
 _Describe what the data is, what it contains, where it is from, etc. Eventually this might be part of a methods section._
 
+The data used in this project is a compilation of information regarding COVID-19 cases based on state, county, age group, whether hospitalization or death resulted from the virus, and whether or not there was an underlying condition (*note that this data only involves information collected from the United States). The data comes from the CDC open database and can be found here: 
+
+*https://data.cdc.gov/Case-Surveillance/COVID-19-Case-Surveillance-Public-Use-Data-with-Ge/n8mc-b4w4*
+
 ## Questions/Hypotheses to be addressed
 _State the research questions you plan to answer with this analysis._
+
+COVID-19 has been and will continue to be widely studied- however, with the presence of constantly evolving data and mutations of the virus, new research and data analysis can shed light on how the disease is changing or how well the effectiveness of our virus containment and elimination strategies are working (or failing). With that being said, there are several questions in particular that I will ask and attempt to answer through this research project:
+
+*Is COVID-19 proliferation dependent on or affected by geographical location in the United States? If so, in what ways?
+
+*How does age factor into susceptibility of the virus? Will the past research concluding that the extremely old are the most vulnerable to the virus continue to be held evident?
+
+*Does ethnicity play a role in the handling of the virus? If there is a difference between certain ethnicities and racial groups in the overall disease burden through the virus, why would that be the case? (E.G. Presence of a good support system or lack thereof, high religious affiliation, healthier overall living, etc.)
+
+*Does the presence of a pre-existing condition have an affect on the proliferation and or outcome of the disease? If so, what pre-existing conditions have the largest affect on the individual?
+
+These questions will serve as valuable starting points that, if possible, will allow for deeper data analysis and cross analysis to determine synergy between variables and geographies (how is overall socioeconomic status different in this location? Is overall living more healthy?). While some of these questions posed such as SES and quality of diet cannot be answered from the CDC data alone, further research in topics of interest will elucidate these questions and allow for a greater reinforcement of already established research and data analysis. 
 
 
 
