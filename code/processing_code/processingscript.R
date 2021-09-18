@@ -15,7 +15,9 @@ library(utils) #to read csv file
 
 #path to data
 #note the use of the here() package and not absolute paths
-data_location <- here::here("MADA","BrentCameron-MADA-analysis2","data","raw_data","COVID-19_Case_Surveillance_Public_Use_Data_with_Geography.csv")
+data_location <- here::here("MADA","BrentCameron-MADA-Project",
+"data","raw_data","COVID-19_Case_Surveillance_Public_Use_Data_with_Geography.csv")
+                       
 
 #load data. 
 rawdata <- utils::read.csv(data_location)
@@ -69,8 +71,7 @@ View(processeddata)
 # http://www.sthda.com/english/wiki/saving-data-into-r-data-format-rds-and-rdata
 
 # location to save file
-save_data_location <- here::here("MADA","BrentCameron-MADA-analysis2","data",
-                                 "raw_data","COVID-19_Case_Surveillance_Public_Use_Data_with_Geography.csv")
+save_data_location <- here::here("data","processed_data", "processeddata.rds")
 
 saveRDS(processeddata, file = save_data_location)
 
