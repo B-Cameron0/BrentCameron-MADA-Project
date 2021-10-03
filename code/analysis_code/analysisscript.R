@@ -11,29 +11,30 @@ library(here) #for data loading/saving
 library(tidyverse) #for help with managing data
 library(scales) #for help with making data more digestible
 library(lubridate) #for help with data
+library(dbplyr) #backend for data
+library(viridis) #for charts
 
 #path to data
 #note the use of the here() package and not absolute paths
 data_location <- here::here("data","processed_data","processeddata.rds")
 
 #load data. 
-mydata<-here::here("MADA","BrentCameron-MADA-Project","data","processed_data", 
-                                      "processeddata.rds")
+mydata<-readRDS(data_location)
 
 ######################################
 #Data exploration/description
 ######################################
 
-#Our outcome of interest is COVID-19 deaths
+#Our outcome of interest is Cancer deaths
 #Variables that will serve as predictors of outcome include...
-#Ethnicity,age group, and whether or not there is an underlying condition
+#Age group, sex, total deaths, ethnicity, race, and cancer sites
 
-#Plot 1, Plotting COVID-19 deaths by Ethnicity
+#Plot 1, Plotting Cancer deaths by Ethnicity
 
-plot_1 <- mydata %>%
-  ggplot(aes(x=ethnicity, y=death_yn)) +
+plot_1 <- mydata  %>%
+  ggplot(aes(x=Race, y=Deaths)) +
   geom_bar(stat = "identity") +
-  ggtitle("COVID-19 Deaths by Ethnicity in the United States")+
+  ggtitle("Cancer Deaths by Race in the United States")+
   geom_smooth(method='lm')+
   scale_x_discrete(guide = guide_axis(n.dodge = 1, check.overlap = TRUE))+
   scale_y_continuous(labels = comma)
@@ -48,11 +49,12 @@ ggsave(filename = figure_file1, plot = plot_1)
 #Plot 2, Plotting COVID-19 deaths by Age Group
 
 plot_2 <-mydata %>%
-  ggplot(aes(x=age_group, y=death_yn))+
+  ggplot(aes(x=`Age Group`, y=Deaths))+
   geom_bar(stat = "identity") +
-  ggtitle("COVID-19 Deaths by Age Group in the United States")+
+  ggtitle("Cancer Deaths by Age Group in the United States")+
   geom_smooth(method='lm')+
-  scale_y_continuous(labels = comma)
+  scale_y_continuous(labels = comma)+
+  scale_x_discrete(guide = guide_axis(n.dodge = 1, check.overlap = TRUE))
 
 
 #Examine the Plot
@@ -62,25 +64,20 @@ plot(plot_2)
 figure_file2 = here::here("results","resultfigure2.png")
 ggsave(filename = figure_file2, plot = plot_2)
 
-#Plot 3, Plotting COVID-19 Deaths with Any Underlying Condition
+#Plot 3, Plotting Cancer Deaths by Site
 
 plot_3 <- mydata %>%
-  ggplot(aes(x=underlying_conditions_yn, y=death_yn)) +
-  geom_bar(stat = "identity") +
-  ggtitle("COVID-19 Deaths with Underlying Condtiions in the United States")+
+  ggplot(aes(x=`Cancer Sites`, y=Deaths)) +
+  geom_bar(stat = "Identity") +
+  ggtitle("Cancer Deaths by Site")+
   geom_smooth(method='lm')+
   scale_x_discrete(guide = guide_axis(n.dodge = 1, check.overlap = TRUE))+
   scale_y_continuous(labels = comma)
-
+  
 #Examine plot
 plot(plot_3)
 
 #Save the plot
 figure_file3 = here::here("results","resultfigure3.png")
 ggsave(filename = figure_file3, plot = plot_3)
-
-
-
-
-
   

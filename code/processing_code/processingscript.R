@@ -5,22 +5,21 @@
 #and saves it as Rds file in the processed_data folder
 
 #The link for the data set used can be found here:
-#https://data.cdc.gov/Case-Surveillance/COVID-19-Case-Surveillance-Public-Use-Data-with-Ge/n8mc-b4w4
+#https://data.cdc.gov/NCHS/Provisional-COVID-19-Deaths-by-Sex-and-Age/9bhg-hcku/data
 
 #load needed packages. make sure they are installed.
 library(readxl) #for loading Excel files
 library(dplyr) #for data processing
 library(here) #to set paths
-library(utils) #to read csv file
 
 #path to data
 #note the use of the here() package and not absolute paths
-data_location <- here::here("MADA","BrentCameron-MADA-Project",
-"data","raw_data","COVID-19_Case_Surveillance_Public_Use_Data_with_Geography.csv")
+data_location <- here::here("data","raw_data",
+"Provisional_COVID-19_Deaths_by_Sex_and_Age.xls")
                        
 
 #load data. 
-rawdata <- utils::read.csv(data_location)
+rawdata <-readxl::read_xlsx(data_location)
 
 #take a look at the data
 dplyr::glimpse(rawdata)
