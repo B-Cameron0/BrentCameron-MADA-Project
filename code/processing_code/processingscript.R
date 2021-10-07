@@ -5,21 +5,23 @@
 #and saves it as Rds file in the processed_data folder
 
 #The link for the data set used can be found here:
-#https://data.cdc.gov/NCHS/Provisional-COVID-19-Deaths-by-Sex-and-Age/9bhg-hcku/data
+#https://wonder.cdc.gov/cancermort-v2017.HTML
 
+#The following variables must be chosen in this order to replicate the data set:
+#Group results by cancer sites and... Sex, Age Group, Race, and Ethnicity
 #load needed packages. make sure they are installed.
+
 library(readxl) #for loading Excel files
 library(dplyr) #for data processing
 library(here) #to set paths
 
 #path to data
 #note the use of the here() package and not absolute paths
-data_location <- here::here("data","raw_data",
-"Provisional_COVID-19_Deaths_by_Sex_and_Age.xls")
+data_location <- here::here("data","raw_data","United_States_Cancer_Mortality_1999-2017.xls")
                        
 
 #load data. 
-rawdata <-readxl::read_xlsx(data_location)
+rawdata <-read_xls(data_location)
 
 #take a look at the data
 dplyr::glimpse(rawdata)
@@ -27,33 +29,12 @@ dplyr::glimpse(rawdata)
 #Examine the data more closely to ensure everything is working properly
 View(rawdata)
 
-#The outcome of interest will be COVID-19 deaths
+#The outcome of interest will be Cancer deaths
 #Variables that will serve as predictors of interest will include...
-#Ethnicity,age group, and whether or not there is an underlying condition
-
-#Additionally, some variables (such as case month, and residents state) will 
-#be included to assess whether there are noticeable differences in the data
-#based on time and geography, particularly between states with varying amounts
-#of minority racial groups, and to analyze the role of ethnicity in
-#a resilience(or susceptibility) to COVID-19, possibly due to a good support
-#system (or lack thereof) or other factors
+#sex,age group, race, ethnicity, and cancer sites
 
 processeddata <- rawdata %>% 
-  select("death_yn", "ethnicity", "age_group", "underlying_conditions_yn",
-         "case_month", "res_state")
-
-#This is a large file with over 2 million observations, naturally, there are 
-#many missing observations (N/A), in particular for recorded death and ethnicity
-#To handle this, we will utilize pairwise deletion to omit all observations that
-#have a missing value in either recorded death, or ethnicity depending on what 
-#data testing we are doing at the time
-#we can alternate if needed to gather more reliable data
-
-#Pairwise deletion for missing death variable (death_yn)
-processeddata[! is.na (processeddata$death_yn),]
-
-#Pairwise deletion for missing ethnicity variables (ethnicity)
-processeddata[! is.na (processeddata$ethnicity)]
+  select("Age Group", "Sex", "Deaths", "Ethnicity", "Race", "Cancer Sites")
 
 #Make sure the processed data looks right
 
