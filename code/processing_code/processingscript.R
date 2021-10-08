@@ -23,16 +23,22 @@ data_location <- here::here("data","raw_data","United_States_Cancer_Mortality_19
 #load data. 
 rawdata <-read_xls(data_location)
 
-#take a look at the data
+#we will not take a look at the data
 dplyr::glimpse(rawdata)
 
-#Examine the data more closely to ensure everything is working properly
+#We will examine the data more closely to ensure everything is working properly
 View(rawdata)
+
+#Because there are several variables that will not be needed including cancer 
+#sites code, age group code, sex code, race code, and ethnicity code, we will 
+#filter out the non-desired variables by selecting only the ones we need 
+#(the predictors of interest)
 
 #The outcome of interest will be Cancer deaths
 #Variables that will serve as predictors of interest will include...
 #sex,age group, race, ethnicity, and cancer sites
 
+#Seleect only the variables we are interested in to remove the rest
 processeddata <- rawdata %>% 
   select("Age Group", "Sex", "Deaths", "Ethnicity", "Race", "Cancer Sites")
 
@@ -43,14 +49,7 @@ dplyr::glimpse(processeddata)
 #One last check
 View(processeddata)
 
-# save data as RDS
-# I suggest you save your processed and cleaned data as RDS or RDA/Rdata files. 
-# This preserves coding like factors, characters, numeric, etc. 
-# If you save as CSV, that information would get lost.
-# See here for some suggestions on how to store your processed data:
-# http://www.sthda.com/english/wiki/saving-data-into-r-data-format-rds-and-rdata
-
-# location to save file
+#We will now save the processed data 
 save_data_location <- here::here("data","processed_data", "processeddata.rds")
 
 saveRDS(processeddata, file = save_data_location)
