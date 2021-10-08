@@ -54,7 +54,10 @@ plot_2 <-mydata %>%
   ggtitle("Cancer Deaths by Age Group in the United States")+
   geom_smooth(method='lm')+
   scale_y_continuous(labels = comma)+
-  scale_x_discrete(guide = guide_axis(n.dodge = 1, check.overlap = TRUE))
+  scale_x_discrete(guide = guide_axis(n.dodge = 1, check.overlap = TRUE))+
+  theme(text = element_text(size = 12),
+        axis.text.x = element_text(angle = 90, hjust = 1)) 
+
 
 
 #Examine the Plot
@@ -72,7 +75,9 @@ plot_3 <- mydata %>%
   ggtitle("Cancer Deaths by Site")+
   geom_smooth(method='lm')+
   scale_x_discrete(guide = guide_axis(n.dodge = 1, check.overlap = TRUE))+
-  scale_y_continuous(labels = comma)
+  scale_y_continuous(labels = comma)+
+  theme(text = element_text(size = 6),
+        axis.text.x = element_text(angle = 90, hjust = 1)) 
   
 #Examine plot
 plot(plot_3)
