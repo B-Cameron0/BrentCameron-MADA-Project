@@ -1,6 +1,6 @@
 ---
-title: "Data Analysis COVID-19 Deaths and Geographical Distribution "
-subtitle: "Examining COVID Through Geographical Differences "
+title: "Examination of United States Cancer Mortality from 1999-2017 and trends between Race, Ethnicity, Age Group, etc."
+subtitle: "Examining Cancer Mortality Through a Variety of Categorical Variables"
 author: Brent Cameron
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
@@ -19,7 +19,7 @@ csl: ../apa.csl
 # Summary/Abstract
 _Write a summary of your project._
 
-I will analyze data to further understand trend of COVID-19 deaths in the United States using geographical data from the CDC open database. The goal of this project is to understand the role that age group, geography, ethnicity, and underlying conditions play in the overall spread, managment, and handling of COVID-19. This project will hopefully shed further light into what could be the best targeted approaches for minimizing disease burden for similar diseases in the future.
+I will analyze data to further understand trend of cancer mortality trends from 1999-2017 in the United States using data collected via the CDC wonder website. The goal of this project is to understand the role that age group, sex, ethnicity, and race play in the overall cancer trends from 1999-2017. This project will hopefully shed further light into what could be the best targeted approaches for minimizing disease burden for cancer in the future. 
 
 
 # Introduction 
@@ -27,29 +27,29 @@ I will analyze data to further understand trend of COVID-19 deaths in the United
 ## General Background Information
 _Provide enough background on your topic that others can understand the why and how of your analysis_ 
 
-The word Coronavirus has grown from a seemingly harmless word for a virus that can create cold and flu-like symptoms, to one of the most recognizable and fear-inducing words worldwide in the sphere of disease. COVID-19 has been responsible for simultaneously one of the most prevalent worldwide pandemics in decades, and one of the most intricate and complex systems of partnerships, vaccination campaigns, and mobilizations to stop the disease worldwide. Because of the vast scope of this virus, resources and networks have been tested, created, and managed, often in completely new areas and capacities. While a multitude of research has already been conducted on COVID-19, including dealing with a variety of recent strains such as Alpha, Delta, and most recently, Mu, understnading the differences in how the disease continues to affect and interact with different populations can serve as an invaluable resource in tailoring new innovative strategies to combat the virus.
+The word cancer has long been one of the most recognizable and fear-inducing words worldwide in the sphere of chronic disease. Cancer, along with heart disease and diabetes, are responsible for the leading causes of death and disability in the United States (according to the Center for Disease Control-https://www.cdc.gov/chronicdisease/about/index.htm#:~:text=Chronic%20diseases%20such%20as%20heart,disability%20in%20the%20United%20States). Because of the vast scope and many different types of the disease, resources and networks have been continually strained in identifying the most efficient and effective ways to counteract cancerous cells. While a multitude of research has already been conducted on cancer, understanding the differences in how the disease continues to affect and interact with different populations can serve as an invaluable resource in tailoring new innovative strategies to combat the disease.
 
 ## Description of data and data source
 _Describe what the data is, what it contains, where it is from, etc. Eventually this might be part of a methods section._
 
-The data used in this project is a compilation of information regarding COVID-19 cases based on state, county, age group, whether hospitalization or death resulted from the virus, and whether or not there was an underlying condition (*note that this data only involves information collected from the United States). The data comes from the CDC open database and can be found here: 
+The data used in this project is a compilation of information regarding cancer mortality cases from 1999-2017 based on age group, sex, ethnicity. race, and cancer sites (*note that this data only includes information collected from the United States). The data comes from the CDC wonder website and can be found here: 
 
-*https://data.cdc.gov/Case-Surveillance/COVID-19-Case-Surveillance-Public-Use-Data-with-Ge/n8mc-b4w4*
+*https://wonder.cdc.gov/cancermort-v2017.HTML
 
 ## Questions/Hypotheses to be addressed
 _State the research questions you plan to answer with this analysis._
 
-COVID-19 has been and will continue to be widely studied- however, with the presence of constantly evolving data and mutations of the virus, new research and data analysis can shed light on how the disease is changing or how well the effectiveness of our virus containment and elimination strategies are working (or failing). With that being said, there are several questions in particular that I will ask and attempt to answer through this research project:
+Cancer has been and will continue to be widely studied- however, with the presence of constantly evolving data and new research shedding light on innovative techniques and approaches to better manage and control the disease, new examinations of data trends can provide a valuable framework for future studies. With that being said, there are several questions in particular that I will ask and attempt to answer through this research project:
 
-*Is COVID-19 proliferation dependent on or affected by geographical location in the United States? If so, in what ways?
+*Are cancer mortality trends dependent on or affected by race in the United States? If so, in what ways?
 
-*How does age factor into susceptibility of the virus? Will the past research concluding that the extremely old are the most vulnerable to the virus continue to be held evident?
+*How does age factor into mortality trends of cancer? Will the past research concluding that the elderly are the most vulnerable continue to be held evident?
 
-*Does ethnicity play a role in the handling of the virus? If there is a difference between certain ethnicities and racial groups in the overall disease burden through the virus, why would that be the case? (E.G. Presence of a good support system or lack thereof, high religious affiliation, healthier overall living, etc.)
+*Does ethnicity play a role in either further susceptibility or resilience to cancer (more or less cancer deaths for certain ethnic groups)? If there is a difference between trends for certain ethnicities in the overall disease burden why would that be the case? (E.G. Presence of a good support system or lack thereof, high religious affiliation, healthier overall living, etc.)
 
-*Does the presence of a pre-existing condition have an affect on the proliferation and or outcome of the disease? If so, what pre-existing conditions have the largest affect on the individual?
+*Does the particular cancer site have an affect on the outcome of the disease? If so, what sites have the largest mortality relative to the number of cases? 
 
-These questions will serve as valuable starting points that, if possible, will allow for deeper data analysis and cross analysis to determine synergy between variables and geographies (how is overall socioeconomic status different in this location? Is overall living more healthy?). While some of these questions posed such as SES and quality of diet cannot be answered from the CDC data alone, further research in topics of interest will elucidate these questions and allow for a greater reinforcement of already established research and data analysis. 
+These questions will serve as valuable starting points that, if possible, will allow for deeper data analysis to determine synergy between variables (do certain races or ethnicities have a higher propensity for cancer in certain sites? Are there trends between sex and age group relative to cancer mortality trends?). While some of these questions posed may not be able to be fully explored and answered with the data set utilized here, further research in topics of interest will elucidate these questions and allow for a greater reinforcement of already established research and data analysis regarding cancer and its disease burden.
 
 
 
