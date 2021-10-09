@@ -32,7 +32,7 @@ The word cancer has long been one of the most recognizable and fear-inducing wor
 ## Description of data and data source
 _Describe what the data is, what it contains, where it is from, etc. Eventually this might be part of a methods section._
 
-The data used in this project is a compilation of information regarding cancer mortality cases from 1999-2017 based on age group, sex, ethnicity. race, and cancer sites (*note that this data only includes information collected from the United States). The data comes from the CDC wonder website and can be found here: 
+The data used in this project is a compilation of information regarding cancer mortality cases from 1999-2017 based on age group, sex, ethnicity. race, and cancer sites (*note that this data only includes information collected from the United States). The data is composed of 8809 observations and comes from the CDC wonder website which can be found here: 
 
 *https://wonder.cdc.gov/cancermort-v2017.HTML
 

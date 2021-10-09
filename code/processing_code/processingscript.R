@@ -38,7 +38,7 @@ View(rawdata)
 #Variables that will serve as predictors of interest will include...
 #sex,age group, race, ethnicity, and cancer sites
 
-#Seleect only the variables we are interested in to remove the rest
+#Select only the variables we are interested in to remove the rest
 processeddata <- rawdata %>% 
   select("Age Group", "Sex", "Deaths", "Ethnicity", "Race", "Cancer Sites")
 
