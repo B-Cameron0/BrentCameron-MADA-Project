@@ -40,11 +40,14 @@ print(mysummary)
 #working with
 
 #First we will examine the age group of our data set:
-mydata %>% ggplot(aes(x = 'Age Group')) + geom_bar(aes(y = ..count..)) +
-  scale_x_discrete(guide = guide_axis(n.dodge = 2)) +
-  theme(plot.title = element_text(size = 12),
-  plot.subtitle = element_text(size = 8))
+mydata %>% ggplot(aes(x = Age)) + geom_bar() +
+  scale_x_discrete(guide = guide_axis(n.dodge = 1)) +
+  theme(text = element_text(size = 10),
+      axis.text.x = element_text(angle = 90, hjust = 1)) 
 
+#As can be seen from the chart the population is largely composed of older 
+#adults between the ages of 50-85
+     
 #Now the sex of the data set:
 mydata %>% ggplot(aes(x = Sex)) + geom_bar()
 
@@ -67,28 +70,39 @@ mydata %>% ggplot(aes(x = Ethnicity)) + geom_bar()
 #missing
 
 #Finally cancer sites:
-mydata %>% ggplot(aes(x = 'Cancer Sites')) + geom_bar()
+mydata %>% ggplot(aes(x = CancerSite)) + geom_bar() +
+  scale_x_discrete(guide = guide_axis(n.dodge = 1)) +
+  theme(text = element_text(size = 8, face = "bold"),
+        axis.text.x = element_text(angle = 90, hjust = 1))
 
-#Now we will examine a closer look at the data to see if any basic trends 
+#It seems as though the largest number of cancer cases are localized to the 
+#digestive system, lung and bronchus, and respiratory system, with a large number 
+#of cases considered to be miscellaneous
+
+#Now that we have completed a preliminary look at our predictors of interest,
+#we will examine a closer look at the data to see if any basic trends 
 #can be seen, with the first plot, we will be examining cancer deaths and 
-#ethnicity
+#race to see if there exists any trends
 
-#Plot 1, Plotting Cancer deaths by Ethnicity
+#Plot 1, Plotting Cancer deaths by Race
 
-Cancer_Deaths_By_Ethnicity <- mydata  %>%
+Cancer_Deaths_By_Race <- mydata  %>%
   ggplot(aes(x=Race, y=Deaths)) +
-  geom_bar(stat = "identity") +
-  ggtitle("Cancer Deaths by Race in the United States")+
-  geom_smooth(method='lm')+
-  scale_x_discrete(guide = guide_axis(n.dodge = 1, check.overlap = TRUE))+
-  scale_y_continuous(labels = comma)
+    geom_bar(stat = "identity") +
+     ggtitle("Cancer Deaths by Race in the United States") +
+      scale_x_discrete(guide = guide_axis(n.dodge = 2, check.overlap = FALSE))+
+       scale_y_continuous(labels = comma)
+
 
 #Examine plot
-plot(Cancer_Deaths_By_Ethnicity)
+plot(Cancer_Deaths_By_Race)
+
+#As we can see from the chart, cancer mortality is largely concentrated to the 
+#White population group, with African American being the second highest
 
 #Save the plot
 figure_file1 = here::here("results","resultfigure1.png")
-ggsave(filename = figure_file1, plot = Cancer_Deaths_By_Ethnicity)
+ggsave(filename = figure_file1, plot = Cancer_Deaths_By_Race)
 
 #Now we will be plotting the number of Cancer deaths by Age Group to examine
 #If a trend is present between certain age groups having higher levels of 
@@ -97,7 +111,7 @@ ggsave(filename = figure_file1, plot = Cancer_Deaths_By_Ethnicity)
 #Plot 2, Plotting Cancer deaths by Age Group
 
 Cancer_Deaths_By_Age_Group <-mydata %>%
-  ggplot(aes(x=`Age Group`, y=Deaths))+
+  ggplot(aes(x=Age, y=Deaths))+
   geom_bar(stat = "identity") +
   ggtitle("Cancer Deaths by Age Group in the United States")+
   geom_smooth(method='lm')+
@@ -108,6 +122,9 @@ Cancer_Deaths_By_Age_Group <-mydata %>%
 
 #Examine the Plot
 plot(Cancer_Deaths_By_Age_Group)
+
+#Like the graph that was viewed earlier, deaths are largely concentrated towards
+#older populations
 
 #Save the plot
 figure_file2 = here::here("results","resultfigure2.png")
@@ -120,7 +137,7 @@ ggsave(filename = figure_file2, plot = Cancer_Deaths_By_Age_Group)
 #Plot 3, Plotting Cancer Deaths by Site
 
 Cancer_Deaths_By_Site <- mydata %>%
-  ggplot(aes(x=`Cancer Sites`, y=Deaths)) +
+  ggplot(aes(x= CancerSite, y=Deaths)) +
   geom_bar(stat = "Identity") +
   ggtitle("Cancer Deaths by Site")+
   geom_smooth(method='lm')+
@@ -132,6 +149,18 @@ Cancer_Deaths_By_Site <- mydata %>%
 #Examine plot
 plot(Cancer_Deaths_By_Site)
 
+#Once again, as previously discussed in the prior chart examining count of 
+#cancer sites, deaths are concentrated in digestive, lung and bronchial,
+#and respiratory
+
+#Save the plot
+figure_file3 = here::here("results","resultfigure3.png")
+ggsave(filename = figure_file3, plot = Cancer_Deaths_By_Site)
+
+#Once again, as previously discussed in the prior chart examining count of 
+#cancer sites, deaths are concentrated in digestive, lung and bronchial,
+#and respiratory
+
 #Save the plot
 figure_file3 = here::here("results","resultfigure3.png")
 ggsave(filename = figure_file3, plot = Cancer_Deaths_By_Site)
@@ -139,4 +168,3 @@ ggsave(filename = figure_file3, plot = Cancer_Deaths_By_Site)
 #########################################
 #Data Fitting/ Statistical Analysis
 #########################################
-  

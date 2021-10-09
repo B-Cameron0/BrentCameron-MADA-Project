@@ -42,8 +42,13 @@ View(rawdata)
 processeddata <- rawdata %>% 
   select("Age Group", "Sex", "Deaths", "Ethnicity", "Race", "Cancer Sites")
 
-#Make sure the processed data looks right
+#rename Age Group to Age allow for easier data processing
+colnames(processeddata) <- c("Age", "Sex", "Deaths", "Ethnicity", "Race", "CancerSite")
 
+#Check to make sure new column name is reflected
+colnames(processeddata)
+
+#Make sure the processed data looks right
 dplyr::glimpse(processeddata)
 
 #One last check
