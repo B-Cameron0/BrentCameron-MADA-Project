@@ -14,6 +14,7 @@
 library(readxl) #for loading Excel files
 library(dplyr) #for data processing
 library(here) #to set paths
+library(tidyverse) #to help with the cleaning of data
 
 #path to data
 #note the use of the here() package and not absolute paths

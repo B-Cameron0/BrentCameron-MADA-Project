@@ -17,7 +17,6 @@ csl: ../apa.csl
 
 
 # Summary/Abstract
-_Write a summary of your project._
 
 I will analyze data to further understand trend of cancer mortality trends from 1999-2017 in the United States using data collected via the CDC wonder website. The goal of this project is to understand the role that age group, sex, ethnicity, and race play in the overall cancer trends from 1999-2017. This project will hopefully shed further light into what could be the best targeted approaches for minimizing disease burden for cancer in the future. 
 
@@ -25,19 +24,16 @@ I will analyze data to further understand trend of cancer mortality trends from 
 # Introduction 
 
 ## General Background Information
-_Provide enough background on your topic that others can understand the why and how of your analysis_ 
 
 The word cancer has long been one of the most recognizable and fear-inducing words worldwide in the sphere of chronic disease. Cancer, along with heart disease and diabetes, are responsible for the leading causes of death and disability in the United States (according to the Center for Disease Control-https://www.cdc.gov/chronicdisease/about/index.htm#:~:text=Chronic%20diseases%20such%20as%20heart,disability%20in%20the%20United%20States). Because of the vast scope and many different types of the disease, resources and networks have been continually strained in identifying the most efficient and effective ways to counteract cancerous cells. While a multitude of research has already been conducted on cancer, understanding the differences in how the disease continues to affect and interact with different populations can serve as an invaluable resource in tailoring new innovative strategies to combat the disease.
 
 ## Description of data and data source
-_Describe what the data is, what it contains, where it is from, etc. Eventually this might be part of a methods section._
 
 The data used in this project is a compilation of information regarding cancer mortality cases from 1999-2017 based on age group, sex, ethnicity. race, and cancer sites (*note that this data only includes information collected from the United States). The data is composed of 8809 observations and comes from the CDC wonder website which can be found here: 
 
 *https://wonder.cdc.gov/cancermort-v2017.HTML
 
 ## Questions/Hypotheses to be addressed
-_State the research questions you plan to answer with this analysis._
 
 Cancer has been and will continue to be widely studied- however, with the presence of constantly evolving data and new research shedding light on innovative techniques and approaches to better manage and control the disease, new examinations of data trends can provide a valuable framework for future studies. With that being said, there are several questions in particular that I will ask and attempt to answer through this research project:
 
@@ -51,43 +47,185 @@ Cancer has been and will continue to be widely studied- however, with the presen
 
 These questions will serve as valuable starting points that, if possible, will allow for deeper data analysis to determine synergy between variables (do certain races or ethnicities have a higher propensity for cancer in certain sites? Are there trends between sex and age group relative to cancer mortality trends?). While some of these questions posed may not be able to be fully explored and answered with the data set utilized here, further research in topics of interest will elucidate these questions and allow for a greater reinforcement of already established research and data analysis regarding cancer and its disease burden.
 
-
-
 # Methods and Results
 
 _In most research papers, results and methods are separate. You can combine them here if you find it easier. You are also welcome to structure things such that those are separate sections._
-
 
 ## Data aquisition
 _As applicable, explain where and how you got the data. If you directly import the data from an online source, you can combine this section with the next._
 
 ## Data import and cleaning
-_Write code that reads in the file and cleans it so it's ready for analysis. Since this will be fairly long code for most datasets, it might be a good idea to have it in one or several R scripts. If that is the case, explain here briefly what kind of cleaning/processing you do, and provide more details and well documented code somewhere (e.g. as supplement in a paper). All materials, including files that contain code, should be commented well so everyone can follow along._
+library(readxl) #for loading Excel files
+library(dplyr) #for data processing
+library(here) #to set paths
 
+#path to data
+data_location <- here::here("data","raw_data","United_States_Cancer_Mortality_1999-2017.xls")
+                       
+#load data. 
+rawdata <-read_xls(data_location)
 
-## Exploratory analysis
+#we will now take a look at the data
+dplyr::glimpse(rawdata)
 
-_Use a combination of text/tables/figures to explore and describe your data. You should produce plots or tables or other summary quantities for the most interesting/important quantities in your data. Depending on the total number of variables in your dataset, explore all or some of the others. FIgures produced here might be histograms or density plots, correlation plots, etc. Tables might summarize your data._
+#We will examine the data more closely to ensure everything is working properly
+View(rawdata)
 
-_Continue by creating plots or tables of the outcome(s) of interest and the predictor/exposure/input variables you are most interested in. If your dataset is small, you can do that for all variables. Plots produced here can be scatterplots, boxplots, violinplots, etc. Tables can be simple 2x2 tables or larger ones._
+Because there are several variables that will not be needed including cancer 
+sites code, age group code, sex code, race code, and ethnicity code, we will 
+filter out the non-desired variables by selecting only the ones we need 
+(the predictors of interest)
 
-_To get some further insight into your data, if reasonable you could compute simple statistics (e.g. t-tests, simple regression model with 1 predictor, etc.) to look for associations between your outcome(s) and each individual predictor variable. Though note that unless you pre-specified the outcome and main exposure, any "p<0.05 means statistical significance" interpretation is not valid._
+The outcome of interest will be Cancer deaths
+Variables that will serve as predictors of interest will include...
+sex,age group, race, ethnicity, and cancer sites
 
-Table \@ref(tab:summarytable) shows a table summarizing the data.
+#Select only the variables we are interested in to remove the rest
+processeddata <- rawdata %>% 
+  select("Age Group", "Sex", "Deaths", "Ethnicity", "Race", "Cancer Sites")
 
+#rename Age Group to Age allow for easier data processing
+colnames(processeddata) <- c("Age", "Sex", "Deaths", "Ethnicity", "Race", "CancerSite")
 
-```{r summarytable,  echo=FALSE}
-resulttable=readRDS("../../results/summarytable.rds")
-knitr::kable(resulttable, caption = 'Data summary table.')
-```
+#Check to make sure new column name is reflected
+colnames(processeddata)
 
+#Make sure the processed data looks right
+dplyr::glimpse(processeddata)
 
-Figure \@ref(fig:resultfigure) shows a scatterplot figure produced by one of the R scripts.
+#One last check
+View(processeddata)
 
-```{r resultfigure,  fig.cap='Analysis figure.', echo=FALSE}
-knitr::include_graphics("../../results/resultfigure.png")
-```
+######################################
+#Data exploration/description
+######################################
+#Load packages to aid with data exploration
+library(ggplot2) #for plotting
+library(broom) #for cleaning up output from lm()
+library(here) #for data loading/saving
+library(tidyverse) #for help with managing data
+library(scales) #for help with making data more digestible
 
+#Let's first examine a summary of our data before we continue with exploration
+mysummary <- summary(mydata)
+print(mysummary)
+
+#As can be seen from the summary, all variables are considered characters except
+#for Deaths, which is considered numerical
+
+#Please note...
+
+#Our outcome of interest is Cancer deaths
+#Variables that will serve as predictors of outcome include...
+#Age group, sex, total deaths, ethnicity, race, and cancer sites
+
+#Before we do plotting of the data comparing our predictors of interest, we 
+#will examine each variable separately to better understand the data we are 
+#working with
+
+#First we will examine the age group of our data set:
+mydata %>% ggplot(aes(x = Age)) + geom_bar() +
+  scale_x_discrete(guide = guide_axis(n.dodge = 1)) +
+  theme(text = element_text(size = 10),
+      axis.text.x = element_text(angle = 90, hjust = 1)) 
+
+#As can be seen from the chart the population is largely composed of older 
+#adults between the ages of 50-85
+     
+#Now the sex of the data set:
+mydata %>% ggplot(aes(x = Sex)) + geom_bar()
+
+#The chart shows that this data set is almost exactly equal in terms of number
+# of male and female 
+
+#Next we will examine the race of the data set:
+mydata %>% ggplot(aes(x = Race)) + geom_bar() +
+scale_x_discrete(guide = guide_axis(n.dodge = 2))
+
+#As can be seen from the data, we are working with a majority White population
+#with a moderate amount of African American and a lower amount of Asian or 
+#Pacific Islander and American Indian or Alaska Native
+
+#Now ethnicity:
+mydata %>% ggplot(aes(x = Ethnicity)) + geom_bar() 
+
+#This chart shows us that the data is composed of a mostly non-Hispanic 
+#population, with Hispanic as the second most common followed by some unknown or
+#missing
+
+#Finally cancer sites:
+mydata %>% ggplot(aes(x = CancerSite)) + geom_bar() +
+  scale_x_discrete(guide = guide_axis(n.dodge = 1)) +
+  theme(text = element_text(size = 8, face = "bold"),
+        axis.text.x = element_text(angle = 90, hjust = 1))
+
+#It seems as though the largest number of cancer cases are localized to the 
+#digestive system, lung and bronchus, and respiratory system, with a large number 
+#of cases considered to be miscellaneous
+
+#Now that we have completed a preliminary look at our predictors of interest,
+#we will examine a closer look at the data to see if any basic trends 
+#can be seen, with the first plot, we will be examining cancer deaths and 
+#race to see if there exists any trends
+
+#Plot 1, Plotting Cancer deaths by Race
+
+Cancer_Deaths_By_Race <- mydata  %>%
+  ggplot(aes(x=Race, y=Deaths)) +
+    geom_bar(stat = "identity") +
+     ggtitle("Cancer Deaths by Race in the United States") +
+      scale_x_discrete(guide = guide_axis(n.dodge = 2, check.overlap = FALSE))+
+       scale_y_continuous(labels = comma)
+
+#Examine plot
+print(Cancer_Deaths_By_Race)
+
+#As we can see from the chart, cancer mortality is largely concentrated to the 
+#White population group, with African American being the second highest
+
+#Now we will be plotting the number of Cancer deaths by Age Group to examine
+#If a trend is present between certain age groups having higher levels of 
+#relative mortality
+
+#Plot 2, Plotting Cancer deaths by Age Group
+
+Cancer_Deaths_By_Age_Group <-mydata %>%
+  ggplot(aes(x=Age, y=Deaths))+
+  geom_bar(stat = "identity") +
+  ggtitle("Cancer Deaths by Age Group in the United States")+
+  geom_smooth(method='lm')+
+  scale_y_continuous(labels = comma)+
+  scale_x_discrete(guide = guide_axis(n.dodge = 1, check.overlap = TRUE))+
+  theme(text = element_text(size = 12),
+        axis.text.x = element_text(angle = 90, hjust = 1)) 
+
+#Examine the Plot
+print(Cancer_Deaths_By_Age_Group)
+
+#Like the graph that was viewed earlier, deaths are largely concentrated towards
+#older populations
+
+# Now we will examine cancer deaths by site to see if there are particular 
+#sites that are responsible for a higher overall mortality
+
+#Plot 3, Plotting Cancer Deaths by Site
+
+Cancer_Deaths_By_Site <- mydata %>%
+  ggplot(aes(x= CancerSite, y=Deaths)) +
+  geom_bar(stat = "Identity") +
+  ggtitle("Cancer Deaths by Site")+
+  geom_smooth(method='lm')+
+  scale_x_discrete(guide = guide_axis(n.dodge = 1, check.overlap = TRUE))+
+  scale_y_continuous(labels = comma)+
+  theme(text = element_text(size = 6),
+        axis.text.x = element_text(angle = 90, hjust = 1)) 
+  
+#Examine plot
+print(Cancer_Deaths_By_Site)
+
+#Once again, as previously discussed in the prior chart examining count of 
+#cancer sites, deaths are concentrated in digestive, lung and bronchial,
+#and respiratory
 
 ## Full analysis
 
