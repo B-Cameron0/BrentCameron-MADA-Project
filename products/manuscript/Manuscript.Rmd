@@ -119,9 +119,9 @@ print(mysummary)
 #Variables that will serve as predictors of outcome include...
 #Age group, sex, total deaths, ethnicity, race, and cancer sites
 
-#Before we do plotting of the data comparing our predictors of interest, we 
-#will examine each variable separately to better understand the data we are 
-#working with
+Before we do plotting of the data comparing our predictors of interest, we 
+will examine each variable separately to better understand the data we are 
+working with
 
 #First we will examine the age group of our data set:
 mydata %>% ggplot(aes(x = Age)) + geom_bar() +
@@ -163,10 +163,10 @@ mydata %>% ggplot(aes(x = CancerSite)) + geom_bar() +
 #digestive system, lung and bronchus, and respiratory system, with a large number 
 #of cases considered to be miscellaneous
 
-#Now that we have completed a preliminary look at our predictors of interest,
-#we will examine a closer look at the data to see if any basic trends 
-#can be seen, with the first plot, we will be examining cancer deaths and 
-#race to see if there exists any trends
+Now that we have completed a preliminary look at our predictors of interest,
+we will examine a closer look at the data to see if any basic trends 
+can be seen, with the first plot, we will be examining cancer deaths and 
+race to see if there exists any trends
 
 #Plot 1, Plotting Cancer deaths by Race
 
@@ -183,9 +183,9 @@ print(Cancer_Deaths_By_Race)
 #As we can see from the chart, cancer mortality is largely concentrated to the 
 #White population group, with African American being the second highest
 
-#Now we will be plotting the number of Cancer deaths by Age Group to examine
-#If a trend is present between certain age groups having higher levels of 
-#relative mortality
+Now we will be plotting the number of Cancer deaths by Age Group to examine
+If a trend is present between certain age groups having higher levels of 
+relative mortality
 
 #Plot 2, Plotting Cancer deaths by Age Group
 
@@ -205,8 +205,8 @@ print(Cancer_Deaths_By_Age_Group)
 #Like the graph that was viewed earlier, deaths are largely concentrated towards
 #older populations
 
-# Now we will examine cancer deaths by site to see if there are particular 
-#sites that are responsible for a higher overall mortality
+Now we will examine cancer deaths by site to see if there are particular 
+sites that are responsible for a higher overall mortality
 
 #Plot 3, Plotting Cancer Deaths by Site
 
