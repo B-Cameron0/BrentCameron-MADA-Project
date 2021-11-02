@@ -242,9 +242,13 @@ mydata_aug %>%
   select(Ethnicity, .pred_class)
 
 #We will now generate a ROC curve to examine the effectiveness of our model
+#We will need to change Ethnicity from a character to a factor
+
+mydata_aug$Ethnicity <- as_factor(mydata_aug$Ethnicity)
+
 mydata_aug %>%
-  roc_curve(truth = Ethnicity , .pred_class ) %>%
-  autoplot()
+  roc_curve(truth = Ethnicity, .pred_class) %>%
+  autoplot
 
 #Now we will use the roc_auc() function to estimate the area under the curve
 mydata_aug %>%
