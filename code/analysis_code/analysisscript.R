@@ -152,8 +152,7 @@ mysummary = summary(mydata)
 #look at summary
 print(mysummary)
 
-#do the same, but with a bit of trickery to get things into the 
-#shape of a data frame (for easier saving/showing in manuscript)
+#change shape to data frame (for easier saving/showing in manuscript)
 summary_df = data.frame(do.call(cbind, lapply(mydata, summary)))
 
 #save data frame table to file for later use in manuscript
@@ -294,5 +293,5 @@ alternative_fit %>%
 
 # save fit results table  
 table_file = here("results", "resulttable.rds")
-saveRDS(lmtable, file = table_file)
+saveRDS(alternative_fit, file = table_file)
 
