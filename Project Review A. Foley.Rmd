@@ -1,0 +1,186 @@
+---
+title: Project Review Template 
+date: "`r file.mtime(knitr::current_input())`"
+#bibliography: ../media/references.bib
+output: 
+  html_document:
+    toc_depth: 3
+    number_sections: true
+---
+
+# Overview
+
+Title of project: Examination of United States Cancer Mortality from 1999-2017 and trends between Race, Ethnicity, Age Group, etc.
+
+Name of project author(s): Brent Cameron
+
+Name of project reviewer: Amelia Foley
+
+Note: delayed review to allow time for additional content to be added (analysis_modeling.R)
+
+
+# Specific project content evaluation
+
+
+## Background, Context and Motivation
+How well is the context of the project described? Is a comprehensive background, including summary of previous/related work given? Is the project well placed into the context of existing work (including proper referencing of existing work). Is it clear why the project was undertaken and what new information it hopes to provide?
+
+### Feedback and Comments
+
+There is some background information presented, but the statements are somewhat vague. I think by adding some specificity and citing more sources to establish the current state of research and what gaps you hope to address with this data analysis, you could strengthen the background.
+
+I would consider removing the first person language from your abstract, as well as giving the reader a brief summary of the results of the analysis in the abstract (just a sentence or so to preview). 
+
+### Summary assessment (PICK ONE, DELETE THE OTHERS)
+* some contextualization and motivation
+
+
+
+## Question description
+How well and clear are the question(s)/hypotheses the project aims to address described? Is it clear how the questions relate to the data?
+
+
+### Feedback and Comments
+
+Questions are clear and seem to be specific. I am not too familiar with this specific field of research, but if these questions have been asked/addressed before by previous researchers, I would be sure to acknowledge that you are continuing/adding to that existing research, and possibly mentioned what trends have been identified (are you hoping to replicate those trends and verify them, or do you expect different results?)
+
+Formate note: I think you may need an extra space between your asterick * and the start of your sentence so that the questions appear in bullet point form in your manuscript - they still appear with astericks currently. 
+
+### Summary assessment
+* question/hypotheses fully clear
+
+
+## Data description
+How well is the data overall described? Is the source provided? Is a codebook or other meta-information available that makes it clear what the data is? 
+
+### Feedback and Comments
+
+The data is described to some extent in the manuscript. I might mentioned the number of observations and variables you are working with to give readers the scope of the study. You mention the key variables and the dates of the study which is good. You've noted that the data only includes the US, but they way that you mention it makes it seem like a weakness - I don't think it is neccesarily bad that it only includes US data. I would just state that the cases occurred from X dates in the US, rather than including it in parentheses. 
+
+Maybe consider including the data link in your references and then citing the reference, or using a hyperlink instead of having the full link text in the manuscript. Overall, I think you could just elaborate a little more in this section. 
+
+There is no codebook for the raw data, but most of the data is easily interpretable. Some old files that are not required for the analysis are still included in the repo and should be removed (COVID file, example data file)
+
+### Summary assessment
+* source and overall structure of data somewhat explained
+
+
+## Data wrangling and exploratory analysis
+How well is the data cleaned/processed and explored? Are all steps reasonable and well explained? Are alternatives discussed and considered? Are meaningful exploratory results shown (e.g. in the supplementary materials)?
+
+### Feedback and Comments
+
+The data processing seen in the processingscript.R is simple and easy to follow. You've included all of your exploration/analysis steps in the manuscript by copying/pasting your analysis script. This is helpful to see each step of your analysis but a little lengthy to incluce in the manuscript. Perhaps you could include a paragraph where you write out your main exploration steps and key findings, and consider keeping the code in a supplemental file. Just the code format (especially with the #'s) is not ideal for the manuscript. Also, I am not sure if you intended to include exploratory plots - just wanted to give you a heads up that they don't appear in the manuscript so you may need to fix some code chunks to make sure they show up. 
+
+No exploratory figures are shown in the manuscript or supplemenatry materials, though some results are noted in the code comments. It's difficult to identify the important results in the current manuscript format - consider summarizing in sentences/paragraphs. 
+
+### Summary assessment
+* major weaknesses in wrangling and exploratory component
+
+
+
+## Appropriateness of Analysis
+Were the analysis methods appropriate for the data? Was the analysis done properly? Were different components of the analysis (e.g. performance measure, variable selection, data pre-processing, model evaluation) done in the best way possible and explained well?
+
+### Feedback and Comments
+
+In the analysisscript.R, it looks like the only basic statistical analysis that is run is a logistic regression predicting ethnicity based on all variables, and then based on one variable - Death. The results of these analyses are not discussed in the script or the manuscript. I would add more comments in the script about the resutls you see as you perform the analysis, and add to your manuscript to discuss the preliminary analysis findings before discussing the machine learning/modeling findings. It seems like this initial analysis might need to be built up a little bit more in order to answer all of the questions that you presented earlier. 
+
+In your analysis modeling.R file, I see that you use a single tree model, a LASSO model, and there is some mention of a random forest in there but it currently does not run since it is in a "#" section - not sure if this is purposeful or not? It seems that there are some formatting issues in this file that may have been copied from a markdown - so there is some plain text that needs a # added in front so that R doesn't try to run those lines of code. 
+
+I'm not sure if all of the code in your analysis is current and updated for your project specifically - it seems like some of it may have been copied in with the intent of editing it and applying it the project, so it seems like that might still be in progress. I would make sure to address this before the final deadline. 
+
+The results of the analysis are not clear in the scripts or manuscript You make some mention of model performance (RMSE) but no interpretation of what this means in terms of your original research questions. It does't seem that any part of your analysis is wrong, just that it may not be fully developed yet. 
+
+### Summary assessment
+* wrong/inadequate analysis
+
+## Presentation
+How well are results presented? Are tables and figures easy to read and understand? Are the main figures/tables publication level quality? 
+
+### Feedback and Comments
+
+Results are not presented. I found some figures in the results folder of the repo, and these look helpful but just need to be added into the manuscript and discussed. 
+
+### Summary assessment
+* results are poorly presented, hard to understand, poor quality
+
+
+## Discussion/Conclusions
+Are the study findings properly discussed? Are strengths and limitations acknowledged? Are findings interpreted properly?
+
+### Feedback and Comments
+
+No discussion present. 
+
+### Summary assessment
+* major parts of discussion missing or wrong 
+
+
+## Further comments
+
+_Add any other comments regarding the different aspects of the project here. Write anything you think can help your classmate improve their project._
+It seems that you have a solid data set and questions that you want to answer, and no part of your project is particularly "wrong", there is just a lot of material missing. I would say that your main focus could be to finish up your analysis and modeling so that you have some more results to present and disucss in the manuscript. Beyond that, I think that you may be able to elaborate a little more with your introductory materials. I think you have made more progress on the project than is represented in the manuscript. Since this is one of the key final products of the project, I would work on updating that to showcase the work that you have done. 
+
+
+
+# Overall project content evaluation
+Evaluate overall features of the project  by filling in the sections below.
+
+
+## Structure
+Is the project well structured? Are files in well labeled folders? Do files have reasonable names? Are all "junk" files not needed for analysis/reproduction removed? By just looking at files and folders, can you get an idea of how things fit together?
+
+### Feedback and Comments
+
+The project is well structure and organized. File names make sense. There is little information on the GitHub landing page about the project structure and how to find certain files and reproduce the analysis. Even though this can be inferred, I would add some instructions and guidelines to your README files. Little to no information is available in readme files currently. 
+
+### Summary assessment
+* well structured
+
+
+## Documentation 
+How well is the project documented? Are you able to understand each step of the whole analysis, each decision that was made, and each line of code? Is enough information provided as comments in code or as part of Rmd files? 
+
+### Feedback and Comments
+
+WRITE YOUR FEEDBACK HERE
+The processing script and analysis script are decently documented, and most of the lines of code have a comment explaning what you are doing, which is helpful. However, I think the analysis script could benefits from a few more comments explaining what results you are seeing as you go through the analysis and what thought process is guiding the differents steps that you take. 
+
+The analysis modeling.R script could benefit from a lot more documentation. You do have comments explaining most lines of code, but the overall organziation of the script is a little lacking in model interpretation and comparison, and the purpose of the code that you have commented out at the end is unclear - make sure to address this/edit it so that it runs or delete if it is unneccesary. 
+
+### Summary assessment
+* decently documented with some gaps
+
+
+
+## Reproducibility
+Are all results fully reproducible? Is documentation provided which clearly explains how to reproduce things, and does it work without the need for any manual intervention? Are you able to re-run the whole analysis without having to do manual interventions/edits?
+
+### Feedback and Comments
+
+There is no documentation of what order to run the scripts in. I would update your Readme documents so that the instructions are easily accessible on your GitHub. Each of the three scripts (processing, analysis, and analysis modeling) successfully ran without intervention, though I recevieved many errors when running the analysis modeling script - I think this script could use some cleaning up (use # to prevent errors with text, remove tick marks leftover from Markdown documents, etc). 
+
+Of the content that is available, it seems that it is mostly reproducible but it is hard to say that the whole project is reproducible since the project is incomplete. 
+
+### Summary assessment
+* fully reproducible without issues
+
+
+## Thoroughness
+How thorough was the overall study? Were alternatives (e.g. different ways of processing the data or different models) considered? Were alternatives discussed? Were the questions/hypotheses fully and thoroughly addressed?
+
+### Feedback and Comments
+
+It seems that only a portion of the project has been completed at this point. Based on the material that is available, the study lacks thoroughness. Data processing is minimal and there is not much discussion of the thought process behind it. Only a few statistical models are performed, and they don't seem to fully address the questions originally presented in the manuscript (they only deal the ethnicity and race, not looking at other variables that were mentioned from what I can tell). For machine learning, LASSO and a single tree are performed but these models have not been interpreted to relate back to the study questions. I would try to add some discussion in both your code and your manuscript to address why you choose one model over another, and then how you are interpreting that model to answer your question (variable importance, single variable vs multiple variables, what outcomes are these model results related to, etc). You have a good bit of interesting questions that you present in your manuscript, but your analsyis doesn't seem to fully address them. Maybe you could talk about some results of your exploratory data analysis that lead you to focus on fewer key questions/variables if that is why you decided to just look at race and ethnicity. 
+
+### Summary assessment
+* weak level of thoroughness
+
+
+## Further comments
+
+
+It's hard to provide too much detailed feedback since it seems that the project is incomplete. You have an interesting question and the data to answer it, the project just seems like it needs a little more work done to have a complete analysis and have the results presented in a organized and accessible way. The key things that I would focus on are completing the analysis, interpreting results, and adding your findings and figures to the manuscript. From there, I would add some instructions on reproducing the project, and then work on elaborating in your manuscript and adding on to the current text by adding specifics and references so that you have a more complete paper. 
+
+
