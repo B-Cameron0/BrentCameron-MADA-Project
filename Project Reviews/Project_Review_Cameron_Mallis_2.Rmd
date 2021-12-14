@@ -1,0 +1,170 @@
+# Overview
+
+Title of project: Examination of United States Cancer Mortality from 1999-2017 and trends between Race, Ethnicity, Age Group, etc.
+
+Name of project author(s): Brent Cameron
+
+Name of project reviewer: Nicholas Mallis
+
+
+
+## Background, Context and Motivation
+How well is the context of the project described? Is a comprehensive background, including summary of previous/related work given? Is the project well placed into the context of existing work (including proper referencing of existing work). Is it clear why the project was undertaken and what new information it hopes to provide?
+
+### Feedback and Comments
+
+I think it might be helpful to talk about specific kinds of cancer in this section. I know it's probably too late for this, but did you think about looking at one specific kind of cancer for your analysis as opposed to all cancers? There's a good bit of variation in characteristics with regard to different cancers.
+
+### Summary assessment 
+* some contextualization and motivation
+
+
+
+## Question description
+How well and clear are the question(s)/hypotheses the project aims to address described? Is it clear how the questions relate to the data?
+
+
+### Feedback and Comments
+I think these questions are clearly stated. The second of your questions (about age) has already been studied quite a bit I believe. My suggestion would be to use age as a covariate but maybe not as a main question.
+
+
+### Summary assessment
+* question/hypotheses fully clear
+
+
+## Data description
+How well is the data overall described? Is the source provided? Is a codebook or other meta-information available that makes it clear what the data is? 
+
+### Feedback and Comments
+
+Are the data observations on the individual level or are they an aggregate of some larger unit? I'm thinking it looks like they are on the individual level, but the way you describe the data makes me wonder if it's the other way around. I would just be clear about what your unit of observation is here and what the data looks like.
+
+### Summary assessment
+* source and overall structure of data somewhat explained
+
+
+
+## Data wrangling and exploratory analysis
+How well is the data cleaned/processed and explored? Are all steps reasonable and well explained? Are alternatives discussed and considered? Are meaningful exploratory results shown (e.g. in the supplementary materials)?
+
+
+### Feedback and Comments
+I see where you do your exploration in your analysis script, but in the manuscript file it prints out strange and I can't see it. It kind of looks like you were trying to paste some plots, but ended up just pasting the code on the manuscript file. I also suggest looking at missingness among your variables and discussing that in the paper. 
+
+### Summary assessment
+* some weaknesses in wrangling and exploratory component
+
+
+
+## Appropriateness of Analysis
+Were the analysis methods appropriate for the data? Was the analysis done properly? Were different components of the analysis (e.g. performance measure, variable selection, data pre-processing, model evaluation) done in the best way possible and explained well?
+
+### Feedback and Comments
+
+It's tough for me to answer this question because the methods/results are not fully displayed or discussed. It appears that you ran a multinomial regression model with several covariates, but that seems to be the only model run. This makes sense it being a nominal response. Either way, I would suggest running different models (simple first and then maybe a LASSO or Decision Tree model)
+
+### Summary assessment
+* defensible but not optimal analysis 
+
+## Presentation
+How well are results presented? Are tables and figures easy to read and understand? Are the main figures/tables publication level quality? 
+
+### Feedback and Comments
+
+The results are not presented in the main text so it is difficult to assess this. 
+
+### Summary assessment
+* results are poorly presented, hard to understand, poor quality
+
+
+## Discussion/Conclusions
+Are the study findings properly discussed? Are strengths and limitations acknowledged? Are findings interpreted properly?
+
+### Feedback and Comments
+
+Conclusion not presented.
+
+### Summary assessment
+* major parts of discussion missing or wrong 
+
+
+## Further comments
+
+_Add any other comments regarding the different aspects of the project here. Write anything you think can help your classmate improve their project._
+
+
+
+# Overall project content evaluation
+Evaluate overall features of the project  by filling in the sections below.
+
+
+## Structure
+Is the project well structured? Are files in well labeled folders? Do files have reasonable names? Are all "junk" files not needed for analysis/reproduction removed? By just looking at files and folders, can you get an idea of how things fit together?
+
+### Feedback and Comments
+
+This needs to be finished and then cleaned up quite a bit. What's there is decently organized, but as mentioned before a lot of pieces of the puzzle are missing, which makes the overall product confusing.
+
+### Summary assessment
+* mostly clear, but some confusing parts (e.g. useless files, things in the wrong folders)
+
+
+
+## Documentation 
+How well is the project documented? Are you able to understand each step of the whole analysis, each decision that was made, and each line of code? Is enough information provided as comments in code or as part of Rmd files? 
+
+### Feedback and Comments
+
+The analysis script is well documented and walks the reader through the steps well, but the lack of information in the READme files does not give the reader the necessary information on how to reproduce the analysis. 
+
+### Summary assessment
+* decently documented with some gaps
+
+
+
+## Reproducibility
+Are all results fully reproducible? Is documentation provided which clearly explains how to reproduce things, and does it work without the need for any manual intervention? Are you able to re-run the whole analysis without having to do manual interventions/edits?
+
+
+### Feedback and Comments
+
+The lack of information in the READme files does not give the reader the necessary information/steps on how to reproduce the analysis. 
+
+analysisscript.R produces this Error...
+Error in saveRDS(lmtable, file = table_file) : object 'lmtable' not found
+
+Manuscript RMD produces error when trying to knit
+
+Error running filter /Library/Frameworks/R.framework/Versions/4.1/Resources/library/rmarkdown/rmarkdown/lua/number-sections.lua:
+...rces/library/rmarkdown/rmarkdown/lua/number-sections.lua:53: attempt to perform arithmetic on a nil value (field '?')
+stack traceback:
+	...rces/library/rmarkdown/rmarkdown/lua/number-sections.lua:53: in function 'Header'
+Error: pandoc document conversion failed with error 83
+Execution halted
+
+
+### Summary assessment
+* major parts not reproducible 
+
+
+## Thoroughness
+How thorough was the overall study? Were alternatives (e.g. different ways of processing the data or different models) considered? Were alternatives discussed? Were the questions/hypotheses fully and thoroughly addressed?
+
+### Feedback and Comments
+
+It doesn't seem that a full and complete analysis was done, nor does it seem that any descriptive plots have been placed in the final manuscript so it's tough to fully assess. More work need to be done here to complete the project.
+
+### Summary assessment
+* weak level of thoroughness
+
+
+
+## Further comments
+
+_Add any other comments regarding the overall project here. Write anything you think can help your classmate improve their project._
+
+I suggest putting a good bit of time in the next week to get your project up to par. Try not to get to too bogged down and just take everything one step at a time. This project has been a lot for me, but when I make lists and get tasks done one by one, things start coming together. 
+
+
+
+
