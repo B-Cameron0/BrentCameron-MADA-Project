@@ -10,16 +10,16 @@ For viewing the processed data, please look to the
 
 # Processing Script
 The processing script that cleans the data can be found in the "processing_code"
-sub-folder via the "code" folder (processingscript.R)
+sub-folder via the "code" folder (processingscript.Rmd)
 
 # Analysis Script
 The analysisscript.R file that executes an exploratory analysis of the processed data
-can be found in the "analysis_code" sub-folder via the "code" folder (analysisscript.R)
+can be found in the "analysis_code" sub-folder via the "code" folder (analysisscript.Rmd)
 
 # Analysis Modeling
 The analysis modeling.R file, which includes the three models used in this project
 (single tree, LASSO, and Random Forest) can be found in the "analysis_code" 
-sub-folder via the "code" folder (analysis modeling.R)
+sub-folder via the "code" folder (analysis modeling.Rmd)
 
 # Manuscript
 The manuscript, which compiles all of the project into an easy to read format,
