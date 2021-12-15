@@ -1,10 +1,15 @@
+
+
+
 ---
   title: "Cancer Data Modeling"
 output: 
   html_document:
   toc: FALSE
 ---
-```{r}
+
+
+``{r}
   #We have already done a basic exploration and analysis of the data, now we will 
 #work on further modeling to better understand our data and infer any causation 
 #present- our main predictors we will analyze will be ethnicity and race
