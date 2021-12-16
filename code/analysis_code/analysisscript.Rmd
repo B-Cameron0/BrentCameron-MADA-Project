@@ -165,6 +165,28 @@ Once again, as previously discussed in the prior chart examining count of
 cancer sites, deaths are concentrated in digestive, lung and bronchial,
 and respiratory
 
+
+#Plot 4, plotting cancer deaths by sex
+```{r}
+Cancer_Deaths_By_Sex <- Cancer_Data %>%
+  ggplot(aes(x= Sex, y=Deaths)) +
+  geom_bar(stat = "Identity") +
+  ggtitle("Cancer Deaths by Sex")+
+  geom_smooth(method='lm')+
+  scale_x_discrete(guide = guide_axis(n.dodge = 1, check.overlap = TRUE))+
+  scale_y_continuous(labels = comma)+
+  theme(text = element_text(size = 6),
+        axis.text.x = element_text(angle = 90, hjust = 1)) 
+
+#Examine plot
+print(Cancer_Deaths_By_Sex)
+```
+
+
+
+
+
+
 # summarize data 
 ```{r}
 mysummary = summary(mydata)

@@ -24,3 +24,6 @@ sub-folder via the "code" folder (analysis modeling.Rmd)
 # Manuscript
 The manuscript, which compiles all of the project into an easy to read format,
 can be found in the "products" folder via the "manuscipt" sub-folder 
+
+#References
+References can be found in the "manuscript" sub-folder via the "products" folder.
