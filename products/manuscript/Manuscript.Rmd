@@ -113,21 +113,21 @@ Results were inconclusive, all three model types experiences complete failure of
 
 Some information was gathered however, regarding basic exploratory analysis of the gathered data relating to age, race, cancer site, and sex, which are displayed here:
 
-```{r distribution,  fig.cap='\\label{fig::distribution}Cancer Deaths by Age Group', echo=FALSE}
+```{r AgeGroup,  fig.cap='\\label{fig::distribution}Cancer Deaths by Age Group', echo=FALSE}
 knitr::include_graphics("../../results/Cancer_Deaths_by_Age_Group.png")
 ```
 
 
-```{r distribution,  fig.cap='\\label{fig::distribution}Cancer Deaths by Race', echo=FALSE}
+```{r Race,  fig.cap='\\label{fig::distribution}Cancer Deaths by Race', echo=FALSE}
 knitr::include_graphics("../../results/Cancer_Deaths_By_Race.png")
 ```
 
 
-```{r distribution,  fig.cap='\\label{fig::distribution}Cancer Deaths by Site', echo=FALSE}
+```{r Site,  fig.cap='\\label{fig::distribution}Cancer Deaths by Site', echo=FALSE}
 knitr::include_graphics("../../results/Cancer_Deaths_by_Site.png")
 ```
 
-```{r distribution,  fig.cap='\\label{fig::distribution}Cancer Deaths by Sex', echo=FALSE}
+```{r Sex,  fig.cap='\\label{fig::distribution}Cancer Deaths by Sex', echo=FALSE}
 knitr::include_graphics("../../results/Cancer_Deaths_by_Sex.png")
 ```
 ## Discussion
