@@ -38,6 +38,8 @@ The data used in this project is a compilation of information regarding cancer m
 
 *https://wonder.cdc.gov/cancermort-v2017.HTML
 
+The data was retrieved by using "cancer sites" as the first group in the "group results by" box, while the four aforementioned variables (age group, sex, ethnicity, and race) were placed in each of the four other available "and by" boxes.
+
 ## Questions/Hypotheses to be addressed
 
 Cancer has been and will continue to be widely studied- however, with the presence of constantly evolving data and new research shedding light on innovative techniques and approaches to better manage and control the disease, new examinations of data trends can provide a valuable framework for future studies. With that being said, there are several questions in particular that I will ask and attempt to answer throughout this research project:
@@ -61,47 +63,6 @@ The data was gathered from the CDC's Wonder website, which allows for personaliz
 As previously stated, the data for this research project was retrieved from the CDC Wonder database. This database was chosen due to the reputable source of the Center for Disease Control, as well as the high quality of reporting and information reported that can be depended on for its reliability and authenticity.
 
 The data had several features removed for sake of more pertinent analysis, as well as the number of observations decreased from 8809 to 8752 due to removal of all NA variables.
-
-
-
-#As can be seen from the chart the population is largely composed of older 
-#adults between the ages of 50-85
-     
-#Now the sex of the data set:
-mydata %>% ggplot(aes(x = Sex)) + geom_bar()
-
-#The chart shows that this data set is almost exactly equal in terms of number
-# of male and female 
-
-#Next we will examine the race of the data set:
-mydata %>% ggplot(aes(x = Race)) + geom_bar() +
-scale_x_discrete(guide = guide_axis(n.dodge = 2))
-
-#As can be seen from the data, we are working with a majority White population
-#with a moderate amount of African American and a lower amount of Asian or 
-#Pacific Islander and American Indian or Alaska Native
-
-#Now ethnicity:
-mydata %>% ggplot(aes(x = Ethnicity)) + geom_bar() 
-
-#This chart shows us that the data is composed of a mostly non-Hispanic 
-#population, with Hispanic as the second most common followed by some unknown or
-#missing
-
-#Finally cancer sites:
-mydata %>% ggplot(aes(x = CancerSite)) + geom_bar() +
-  scale_x_discrete(guide = guide_axis(n.dodge = 1)) +
-  theme(text = element_text(size = 8, face = "bold"),
-        axis.text.x = element_text(angle = 90, hjust = 1))
-
-#It seems as though the largest number of cancer cases are localized to the 
-#digestive system, lung and bronchus, and respiratory system, with a large number 
-#of cases considered to be miscellaneous
-
-Now that we have completed a preliminary look at our predictors of interest,
-we will examine a closer look at the data to see if any basic trends 
-can be seen, with the first plot, we will be examining cancer deaths and 
-race to see if there exists any trends
 
 ## Full analysis
 Race and Ethnicity were assessed to determine any statistical significance relating to Deaths (cancer deaths), utilizing a comparison between a null model and 1. Single Tree, 2. LASSO, and 3. Random Forest models. 
