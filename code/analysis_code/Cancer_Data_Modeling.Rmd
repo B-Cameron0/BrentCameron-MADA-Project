@@ -1,11 +1,7 @@
-
-
-
 ---
-  title: "Cancer Data Modeling"
+title: "Cancer Data Modeling"
 output: 
-  html_document:
-  toc: FALSE
+  html_document
 ---
 
 
@@ -18,6 +14,7 @@ output:
 #exploration, fitting, and modeling of the data 
 #please note that If you do not have the packages installed you will have to
 #first install them with the "install.packages()" command
+```{r}
 library(tidyverse) #for streamlining manipulating data
 library(tidymodels) # for streamlining fitting data to models
 library(broom) #for cleaning up output from lm()
@@ -30,6 +27,9 @@ library(ranger) #for fitting random forest model
 library(vip) #for identifying most important variables in our models (the "VIPS")
 library(skimr) #for viewing alternative information about variables
 library(doParallel) # for parallel processing for quicker tuning
+```
+
+
 
 #Summary of our data tells us that we are dealing with almost all character 
 #type variables, with the only numerical being deaths
@@ -68,21 +68,26 @@ set.seed(123)
 
 #We will now split the data by 70% for our training data and 30% for our testing
 #We will start by examiniing race as our strata
+```{r}
 data_split <- initial_split(cancer_data_cleaned, prop = 7/10,#7/10 stands for 70% training
-                            strata = "Race") # and the rest (30%) for testing) 
+                strata = "Deaths") # and the rest (30%) for testing) 
+```
+
 
 #Now we will organize our sets of training and test data
+```{r}
 train_data <- training(data_split)
 
 test_data <- testing(data_split)
+```
 
 #We will now utilize a 5-fold cross validation, 5 times repeated, we will 
 #stratify on "Race" for the CV folds
-FoldCV5 <- vfold_cv(train_data, v = 5, repeats = 5, strata = "Race")
+FoldCV5 <- vfold_cv(train_data, v = 5, repeats = 5, strata = "Deaths")
 
 #Now we will create our recipe for our data and fitting
 #We will code the categorical variables as dummy variables
-recipe_Race <-recipe(Race ~ ., data = train_data) %>%
+recipe_Deaths <-recipe(Deaths ~ ., data = train_data) %>%
   step_dummy(all_nominal_predictors())
 
 #Now that we have decided on what our main predictor variable will be 
@@ -109,26 +114,34 @@ recipe_Race <-recipe(Race ~ ., data = train_data) %>%
 #pursuing
 
 #We need to specify our model before we start computing
-lm_model <- linear_reg() %>% 
-  set_engine('lm') %>%
+```{r}
+null_model1 <-null_model() %>% 
+  set_engine('parsnip') %>%
   set_mode('regression')
+```
+
+  
+#We will now create our wokflow
+```{r}
+nullmodel_workflow <- workflow() %>% 
+  add_model(null_model1) %>%
+  add_recipe(recipe_Deaths)
+```
+
 
 #We will now compute the performance of a null model for our training and test data
 #(doesn't use any predictor information)
+#We use our deisgnated workflow in fit_resamples followed by our designated name for cross-validation
 
-#Train Data Computing
-train_null_recipe <- lm(Race ~ 1, data = train_data)
+#We will now fit our model
+```{r}
 
-#Calculating RMSE
-train_null_recipe %>% augment(newdata = train_data) %>%
-                      rmse(truth = Race, estimate = .fitted)
+train_null_recipe <- fit_resamples(nullmodel_workflow, Cross_Validation_5F, control=control_resamples(verbose=TRUE))
 
-#Test Data Computing
-test_null_recipe <- lm(Race ~ 1, data = test_data)
+print(train_null_recipe)
 
-#Calculating RMSE
-test_null_recipe %>% augment(newdata = test_data) %>%
-  rmse(truth = Race, estimate = .fitted)
+collect_metrics(train_null_recipe)
+```
 
 
 #When comparing our models, if the RMSE (our chosen measure of significance) of our other models is worse than what the null model 
@@ -138,6 +151,7 @@ test_null_recipe %>% augment(newdata = test_data) %>%
 ####################################
 #We will now start with our first comparison model (the single tree model)
 #Specify Model
+```{r}
 tune_spec_TREE <-
   decision_tree(
     cost_complexity = tune(),
@@ -146,27 +160,39 @@ tune_spec_TREE <-
   set_engine("rpart") %>%
   set_mode("regression")
 tune_spec_TREE
+```
+
 
 #We will now define the workflow for the tree 
+```{r}
 workflow_TREE <- workflow() %>%
             add_model(tune_spec_TREE) %>%
-            add_recipe(recipe_Race) 
+            add_recipe(recipe_Deaths) 
 
 #We will now specify the tuning grid
 grid_TREE <- grid_regular(cost_complexity(),
                           tree_depth(),
                           levels = 5)
 grid_TREE
+```
 
 
 #We will now tune using cross validation and the tune_grid() function
+```{r}
 res_TREE<-
   workflow_TREE %>%
-  tune_grid(resamples = FoldCV5 , grid = grid_TREE, metrics = metric_set(rmse))
+  tune_grid(resamples = Cross_Validation_5F , grid = grid_TREE, metrics = metric_set(rmse))
 
 #Now we will run the autoplot() function to look at some diagnostics
 res_TREE %>%
   autoplot()
+  ggsave(here::here("results", "singletree.png"))
+  
+  res_TREE%>%show_best()
+```
+
+
+
 
 #Now we will select the best decision tree model
 TOP_TREE <- res_TREE %>% 
@@ -212,7 +238,7 @@ resid_tree_plot
 tree_model_performance <- res_TREE %>% show_best(n=1)
 print(tree_model_performance)
 
-###HOW DOES THIS MODEL PERFORM?
+# HOW DOES THIS MODEL PERFORM?
 
 
 #########################################
@@ -223,8 +249,8 @@ code used from https://www.tidymodels.org/start/case-study/
 
 ```{r}
 #We will once again start by constructing our model
-lasso_model <- linear_reg() %>%
-  set_mode("regression") %>%
+lasso_model <- logistic_reg() %>%
+  set_mode("classification") %>%
   set_engine("glmnet") %>%
   set_args(penalty = tune(), mixture = 1) 
 ```
@@ -236,7 +262,7 @@ We will now create our workflow
 ```{r}
 lasso_workflow <-workflow() %>%
   add_model(lasso_model) %>%
-  add_recipe(recipe_avg_time_lap)
+  add_recipe(recipe_race)
 ```
 
 Now we will tune our LASSO model
