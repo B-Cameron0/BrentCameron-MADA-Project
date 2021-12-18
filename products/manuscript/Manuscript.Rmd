@@ -1,5 +1,5 @@
 ---
-title: "Examination of United States Cancer Mortality from 1999-2017 and trends between Race, Ethnicity, Age Group, etc."
+title: "Examination of United States Cancer Mortality from 1999-2017 and trends between Race, Ethnicity, Age Group"
 subtitle: "Examining Cancer Mortality Through a Variety of Categorical Variables"
 author: Brent Cameron
 date: "`r Sys.Date()`"
@@ -12,7 +12,7 @@ output:
   bookdown::html_document2: 
     toc: false
 bibliography: References.bib
-csl: apa.csl
+csl: elsevier.csl
 ---
 
 
@@ -27,7 +27,7 @@ With an increasingly aging worldwide population, Cancer and its disease burden h
 
 ## General Background Information
 
-The word cancer has long been one of the most recognizable and fear-inducing words worldwide in the sphere of chronic disease. Cancer, along with heart disease and diabetes, are responsible for the leading causes of death and disability in the United States (according to the Center for Disease Control-https://www.cdc.gov/chronicdisease/about/index.htm#:~:text=Chronic%20diseases%20such%20as%20heart,disability%20in%20the%20United%20States). In 2012, there were an estimated 14.1 million new cancer cases with 8.2 million cancer deaths worldwide[@Torre2016]. Cancer also affects the elderly at a hightened rate,being the fourth highest cause of death for the very old,with people aged 85 and older making up 6% of total cancer cases[@Hashim2020]. Additionally, cancer disproportionately affects some racial and ethnic groups more than others, with Black patients being more likely to have metastatic disease at diagnosis as well as (along with the Hispanic population) being less likely to receive medical treatment[@Zhang2020]. 
+The word cancer has long been one of the most recognizable and fear-inducing words worldwide in the sphere of chronic disease. Cancer, along with heart disease and diabetes, are responsible for the leading causes of death and disability in the United States. In 2012, there were an estimated 14.1 million new cancer cases with 8.2 million cancer deaths worldwide[@Torre2016]. Cancer also affects the elderly at a hightened rate,being the fourth highest cause of death for the very old,with people aged 85 and older making up 6% of total cancer cases[@Hashim2020]. Additionally, cancer disproportionately affects some racial and ethnic groups more than others, with Black patients being more likely to have metastatic disease at diagnosis as well as (along with the Hispanic population) being less likely to receive medical treatment[@Zhang2020]. 
 
   This disproportional effect to some races can also have increased effects for certain types of cancer. For instance, according to research done by [@Schabath2016], lung cancer in particular has "racial and ethnic differences which in turn impacts the overall epidemiological differences..."   All is not depressing however, as [@Ozdemir2017] states that while there are some discrepancies in how cancer effects different groups (with under representation of the Black population in clinical trials being one example), the use of the patient navigation model (where an individual is trained to offer support for patients in trials), has made a positive impact in improving health care access.   
 
