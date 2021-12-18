@@ -69,11 +69,13 @@ We first set our seed, which is simply initializing a pseudorandom number genera
 set.seed(123)
 ```
 
-Then we split the data
+Now we will split the data
+We will now split the data by 70% for our training data and 30% for our testing
+We will be using (Cancer) Deaths as our outcome which we will be evaluating
 ```{r}
-#We will now split the data by 70% for our training data and 30% for our testing
-#We will start by examining race as our strata (Race and Ethnicity are our two main predictors)
-data_split <- initial_split(Cancer_Data, prop = 7/10, strata = Race)#7/10 stands for 70%   training, strata = "Race") # and the rest (30%) for testing)
+data_split <- initial_split(Cancer_Data, prop = 7/10, strata = Deaths)
+
+#7/10 stands for 70% training, (strata = "Deaths") # and the rest (30%) for testing)
 ```
 
 Now we will organize our sets of training and test data
@@ -83,30 +85,20 @@ train_data <- training(data_split)
 test_data <- testing(data_split)
 ```
 
-We will now convert the response variable to a factor
-```{r}
-null_rec <- recipe(Race ~ ., data=train_data) %>% 
-  step_mutate(Race=factor(as.logical(Race)))
-```
-
 We will now utilize a 5-fold cross validation, 5 times repeated, we will 
 stratify on "Race" for the CV folds
 ```{r}
-Cross_Validation_5F <- vfold_cv(train_data, v = 5, repeats = 5, strata = "Race")
+Cross_Validation_5F <- vfold_cv(train_data, v = 5, repeats = 5, strata = "Deaths")
 ```
 
 Now we will create our recipe for our data and fitting,
 We will code the categorical variables as dummy variables
 ```{r}
-recipe_Race <-recipe(Race ~ ., data = train_data) %>%
-  step_dummy(all_numerical_predictors())
+recipe_Deaths <-recipe(Deaths ~ ., data = train_data) %>%
+  step_dummy(all_nominal_predictors())
 ```
 
 # Modeling
-Now that we have decided on what our main predictor variable will be 
-(Race (we will do ethnicity later)) and created our data sets (training and 
-test), we can now begin modeling
-
 We will fit a null model, single tree model, LASSO model, and a random forest model (total of four)
 
 Our steps should be as follows...
@@ -121,7 +113,6 @@ Our steps should be as follows...
 
 
 # NULL MODEL
-
 Before we can adequately assess if any of our models posess good fit of our data
 we need to first create our null model that we can compare the rest of our models
 to, if none of our other models perform better than the Null, they are not worth 
@@ -132,69 +123,61 @@ We need to specify our model before we start computing
 *Note that we use "classification" for our mode instead of "regression",*
 *this is because the mode is predicted for all outcomes, where as continuous,* *number based data would be best with "regression"*
 ```{r}
-Null_Model<- null_model() %>%
+null_model1<- null_model() %>%
   set_engine("parsnip") %>%
-  set_mode("classification") %>%
+  set_mode("regression") %>%
   translate()
 ```
 
-Now we Combine Workflow and Recipe Together
+We will now create our worflow
 ```{r}
-null_wflow <- workflow() %>% 
-  add_recipe(recipe_Race) %>%
-  add_model(Null_Model)
+nullmodel_workflow <- workflow() %>% 
+  add_model(null_model1) %>%
+  add_recipe(recipe_Deaths)
 ```
 
 
 We will now compute the performance of a null model for our training and test data
 *(doesn't use any predictor information)*
 
+
+#We will now fit our model
+#We use our deisgnated workflow in fit_resamples followed by our designated name for cross-validation
+
 *Note that our main feature of interest is cancer deaths, followed by how the variables "Race" and "Ethnicity" effect rates of cancer death overall*
-# Train Data Computing
 ```{r}
-train_null_recipe <- lm(Deaths ~ ., data = train_data)
-```
+train_null_recipe <- fit_resamples(nullmodel_workflow, Cross_Validation_5F, control=control_resamples(verbose=TRUE))
 
-# Calculating RMSE
-```{r}
-train_null_recipe %>% augment(newdata = train_data) %>%
-                      rmse(truth = Deaths, estimate = .fitted)
-```
+print(train_null_recipe)
 
-Test Data Computing
-```{r}
-test_null_recipe <- lm(Deaths ~ ., data = test_data)
+collect_metrics(train_null_recipe)
 ```
+#This warning would usually be bad on any other model, but since we are receiving it on our null model, we know that it is working as intended
 
-
-# Calculating RMSE
-```{r}
-test_null_recipe %>% augment(newdata = test_data) %>%
-  rmse(truth = Deaths, estimate = .fitted)
-```
 #When comparing our models, if the RMSE (our chosen measure of significance) of our other models is worse (in this case a higher value than what is given here) than what the null model's is, there is indication that the model would not do well at fitting the data. 
 
-We will start with identifying the best model for race
 
 # SINGLE TREE MODEL
 
-We will now start with our first comparison model (the single tree model)
-First we will specify the model
+#We will now start with our first comparison model (the single tree model)
+#Specify our model
 ```{r}
 tune_spec_TREE <-
   decision_tree(
     cost_complexity = tune(),
-    tree_depth = tune(5),
+    tree_depth = tune(),
   ) %>%
   set_engine("rpart") %>%
-  set_mode("classification")
+  set_mode("regression")
+
+tune_spec_TREE
 ```
 
 We will now define the workflow for the tree 
 ```{r}
 workflow_TREE <- workflow() %>%
             add_model(tune_spec_TREE) %>%
-            add_recipe(recipe_Race) 
+            add_recipe(recipe_Deaths) 
 ```
 
 
@@ -210,44 +193,22 @@ Let's examine this further
 grid_TREE%>%
     count(tree_depth)
 ```
-
-
-We will now tune using cross validation and the tune_grid() function
-We will utilize parallell processing to speed up processing time beforehand
-
-```{r}
-ncores = 5 #Ncores is used to select the number of cores you want to recruit
-#for processing, different computers will naturally have different ideal numbers
-
-cluster <- makePSOCKcluster(5) #make PSOCKcluster stands for creating a sock
-#cluster within the 'snow' package, this allowsa for increased computing time
-
-  registerDoParallel(5) #registers parallel backend with foreach package
-```
-
-Now processing should go faster
 ```{r}
 res_TREE<-
-  workflow_TREE %>% 
-   tune_grid(resamples = Cross_Validation_5F)
-      grid = grid_TREE
+  workflow_TREE %>%
+   tune_grid(resamples = Cross_Validation_5F, grid = grid_TREE, metrics =            metric_set(rmse))
 ```
-
-
-Now we will stop the processing for now before we continue with our analysis
-```{r}
-stopCluster(cluster)
-```
-
 Now we will run the autoplot() function to look at some diagnostics
 ```{r}
 res_TREE %>%
   autoplot()
+  ggsave(here::here("results", "singletree.png"))
+  
+  res_TREE%>%show_best()
 ```
 
 # HOW DOES THIS MODEL PERFORM?
-Unfortunately, all models tried have failed, we will hopefully find a 
-model that fits the data better
+The single tree model with a depth of 15 performed the best with an RMSE of 20315, which is lower than the RMSE of the null model of 23678, this is good since it means that our performance for this model(single tree) was better than the null.
 
 
 # LASSO
@@ -257,8 +218,8 @@ We will turn all categorical variables into numerical
 Cancer_Data1<- sapply(Cancer_Data, as.factors)
 ```{r}
 #We will once again start by constructing our model
-lasso_model <- linear_reg() %>%
-  set_mode("regression") %>%
+lasso_model <- logistic_reg() %>%
+  set_mode("classification") %>%
   set_engine("glmnet") %>%
   set_args(penalty = tune(), mixture = 1) 
 ```
