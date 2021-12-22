@@ -141,10 +141,10 @@ We will now compute the performance of a null model for our training and test da
 *(doesn't use any predictor information)*
 
 
-#We will now fit our model
-#We use our deisgnated workflow in fit_resamples followed by our designated name for cross-validation
+We will now fit our models
+We use our deisgnated workflow in fit_resamples followed by our designated name for cross-validation
 
-*Note that our main feature of interest is cancer deaths, followed by how the variables "Race" and "Ethnicity" effect rates of cancer death overall*
+*Note that our main outcome of interest is cancer deaths, our main predictors of interest are the variables "Race" and "Ethnicity"*
 ```{r}
 train_null_recipe <- fit_resamples(nullmodel_workflow, Cross_Validation_5F, control=control_resamples(verbose=TRUE))
 
@@ -152,15 +152,15 @@ print(train_null_recipe)
 
 collect_metrics(train_null_recipe)
 ```
-#This warning would usually be bad on any other model, but since we are receiving it on our null model, we know that it is working as intended
+This warning would usually be bad on any other model, but since we are receiving it on our null model, we know that it is working as intended
 
-#When comparing our models, if the RMSE (our chosen measure of significance) of our other models is worse (in this case a higher value than what is given here) than what the null model's is, there is indication that the model would not do well at fitting the data. 
+When comparing our models, if the RMSE (our chosen measure of significance) of our other models is worse (in this case a higher value than what is given here, 23678) than what the null model's is, there is indication that the model would not do well at fitting the data. 
 
 
 # SINGLE TREE MODEL
 
-#We will now start with our first comparison model (the single tree model)
-#Specify our model
+We will now start with our first comparison model (the single tree model)
+Specify our model
 ```{r}
 tune_spec_TREE <-
   decision_tree(
@@ -193,6 +193,7 @@ Let's examine this further
 grid_TREE%>%
     count(tree_depth)
 ```
+Now we will create our workflow
 ```{r}
 res_TREE<-
   workflow_TREE %>%
@@ -213,13 +214,10 @@ The single tree model with a depth of 15 performed the best with an RMSE of 2031
 
 # LASSO
 Now we will construct a LASSO model
-
-We will turn all categorical variables into numerical
-Cancer_Data1<- sapply(Cancer_Data, as.factors)
 ```{r}
 #We will once again start by constructing our model
-lasso_model <- logistic_reg() %>%
-  set_mode("classification") %>%
+lasso_model <- linear_reg() %>%
+  set_mode("regression") %>%
   set_engine("glmnet") %>%
   set_args(penalty = tune(), mixture = 1) 
 ```
@@ -231,7 +229,7 @@ We will now create our workflow
 ```{r}
 lasso_workflow <-workflow() %>%
   add_model(lasso_model) %>%
-  add_recipe(recipe_Race)
+  add_recipe(recipe_Deaths)
 ```
 
 Now we will tune our LASSO model
@@ -261,18 +259,74 @@ later data analysis, fitting, modeling, etc.
 stopCluster(cluster)
 ```
 
-We will now evaluate our LASSO model
+```{r}
+#Now we will view metrics
+lasso_tune_res %>% collect_metrics()
+```
 
-The LASSO model also failed in its modeling, we will finally try the RandomForest model
+Now we will select top models
+```{r}
+top_lasso <- 
+  lasso_tune_res %>% show_best("rmse") %>% arrange(penalty)
+top_lasso 
+```
+Now we will see the best lasso out of our five top models
+```{r}
+best_lasso <- lasso_tune_res %>% select_best()
+best_lasso 
+```
+Our best LASSO model appears to be the one with a penalty of 1
+
+Now we finalize our workflow with the top model and fit it 
+```{r}
+lasso_topmodel_workflow <- lasso_workflow %>% finalize_workflow(best_lasso)
+
+lasso_topfit<- lasso_topmodel_workflow %>% fit(train_data)
+
+lasso_topfit
+```
+
+Now that we have found our top LASSO model, we will now plot it to show quality of fit
+```{r}
+autoplot(lasso_tune_res)
+```
+```{r}
+#we will now calculate the residuals
+lasso_residuals <- lasso_topfit %>%
+  augment(train_data) %>% 
+  select(.pred, Deaths) %>%
+  mutate(.resid = Deaths - .pred) 
+
+lasso_residuals
+```
+
+```{r}
+#Now we will compare model predictions from tuned model to our actual outcomes
+lasso_pred_plot <- ggplot(lasso_residuals, aes(x = Deaths, y = .pred)) + geom_point() + 
+  labs(title = "Predictions vs Actual Outcomes: LASSO", x = "Deaths (Outcome)", y = "Deaths (Prediction)")
+lasso_pred_plot
+```
+
+We will now compare our residuals vs predictions
+```{r}
+lasso_residuals_plot <- ggplot(lasso_residuals, aes(y = .resid, x = .pred)) + geom_point() + 
+  labs(title = "LASSO Model Residuals VS Predictions", x = "Deaths Prediction", y = "Residuals")
+
+lasso_residuals_plot 
+```
+
+Finally we will compare our LASSO model to our null model
+```{r}
+lasso_tune_res %>% show_best(n=1) #view RMSE for best lasso model
+```
+Our LASSO model has a mean value of 22121.36, which is lower than the null model of 23678, but higher than our single tree model value of 20315. We will finally utilize the RandomForest model to check for quality of fit for our model.
+
 
 # RANDOMFOREST
-
-  Both of our past models so far have failed, we will now repeat the 
- steps with a random forest model in the hopes of finding significance
+So far our single tree model has performed best, we will evaluate the random forest model lat
   
 *Please note that for Random Forest models, "num.threads" and importance*
 *is required or else all models will fail*
-    
 ```{r}
 randomforest_model <- rand_forest() %>%
   set_args(mtry = tune(),
@@ -289,7 +343,7 @@ randomforest_model <- rand_forest() %>%
 #We will set our workflow once again
 randomforest_workflow <- workflow() %>% 
   add_model(randomforest_model) %>%
-  add_recipe(recipe_Race)
+  add_recipe(recipe_Deaths)
 
 #We will now repeat our steps as the first two models to specify our tuning grid
 #We will use parallel computing once again to vastly decrease the time it takes 
@@ -309,7 +363,7 @@ We will set our workflow once again
 ```{r}
   randomforest_workflow <- workflow() %>% 
     add_model(randomforest_model) %>%
-    add_recipe(recipe_Race)
+    add_recipe(recipe_Deaths)
 ```
   
 We will now repeat our steps as the first two models to specify our tuning grid
