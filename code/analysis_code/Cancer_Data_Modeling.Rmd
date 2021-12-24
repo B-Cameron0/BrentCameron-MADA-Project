@@ -150,18 +150,16 @@ train_null_recipe <- fit_resamples(nullmodel_workflow, Cross_Validation_5F, cont
 
 print(train_null_recipe)
 
-collect_metrics(train_null_recipe)
+null_recipe_metrics<-collect_metrics(train_null_recipe)
 ```
 This warning would usually be bad on any other model, but since we are receiving it on our null model, we know that it is working as intended
 
 When comparing our models, if the RMSE (our chosen measure of significance) of our other models is worse (in this case a higher value than what is given here, 23678) than what the null model's is, there is indication that the model would not do well at fitting the data. 
 
 
-# SINGLE TREE MODEL
-
-We will now start with our first comparison model (the single tree model)
-Specify our model
+*SINGLE TREE MODEL*
 ```{r}
+#Specify Model
 tune_spec_TREE <-
   decision_tree(
     cost_complexity = tune(),
@@ -169,50 +167,106 @@ tune_spec_TREE <-
   ) %>%
   set_engine("rpart") %>%
   set_mode("regression")
-
 tune_spec_TREE
 ```
 
-We will now define the workflow for the tree 
 ```{r}
+#We will now define the workflow for the tree 
 workflow_TREE <- workflow() %>%
             add_model(tune_spec_TREE) %>%
             add_recipe(recipe_Deaths) 
 ```
 
 
-We will now specify the tuning grid
 ```{r}
+#We will now specify the tuning grid
 grid_TREE <- grid_regular(cost_complexity(),
                           tree_depth(),
                           levels = 5)
 grid_TREE
 ```
-Let's examine this further
+
+
 ```{r}
-grid_TREE%>%
-    count(tree_depth)
-```
-Now we will create our workflow
-```{r}
+#We will now tune using cross validation and the tune_grid() function
 res_TREE<-
   workflow_TREE %>%
-   tune_grid(resamples = Cross_Validation_5F, grid = grid_TREE, metrics =            metric_set(rmse))
+  tune_grid(resamples = Cross_Validation_5F , grid = grid_TREE, metrics = metric_set(rmse))
 ```
-Now we will run the autoplot() function to look at some diagnostics
+
+
 ```{r}
+#Now we will run the autoplot() function to look at some diagnostics
 res_TREE %>%
   autoplot()
-  ggsave(here::here("results", "singletree.png"))
-  
-  res_TREE%>%show_best()
 ```
 
-# HOW DOES THIS MODEL PERFORM?
-The single tree model with a depth of 15 performed the best with an RMSE of 20315, which is lower than the RMSE of the null model of 23678, this is good since it means that our performance for this model(single tree) was better than the null.
+
+```{r}
+#Now we will select the best decision tree model
+TOP_TREE <- res_TREE %>% 
+  select_best("rmse")
+
+TOP_TREE
+```
 
 
-# LASSO
+```{r}
+#Now we need to finalize the workflow
+single_tree_workflow_FINAL <- workflow_TREE %>% finalize_workflow(TOP_TREE)
+single_tree_workflow_FINAL
+```
+
+
+```{r}
+#Now we will utilize the fit() function to fit to the training data
+fit_FINAL_TREE <- single_tree_workflow_FINAL %>% last_fit(data_split)
+
+#Now we will collect the data from our fit
+fit_FINAL_TREE %>% collect_metrics()
+```
+
+
+```{r}
+#We will also collect the predictions
+pred_TREE <- fit_FINAL_TREE %>% collect_predictions()
+
+#We will now make two plots, one that shows model predictions from the tuned
+#model compared to actual outcomes, and one that plots residuals (RMSE)
+pred_tree_plot <- ggplot(data = pred_TREE, aes(x = .pred, y = Deaths)) + 
+           geom_point() +
+           labs(title = "Plot Comparing Model Predictions from Tuned to Actual",
+                x = "Predictions", y = "Outcomes")
+#view the plot
+pred_tree_plot
+```
+
+
+```{r}
+#We need to calculate our residuals before we can plot 
+#Note that the residuals is the difference between our main predictor and the others
+pred_TREE$residuals <- pred_TREE$Deaths - pred_TREE$.pred
+```
+
+
+```{r}
+#Now we will plot our residuals
+resid_tree_plot <- ggplot(data= pred_TREE, aes(x=.pred , y=residuals)) + geom_point() +
+                    labs(title="Plot of Residuals",
+                    x="Predictions", y= "Residuals")
+#view the plot
+resid_tree_plot 
+
+#Now we will compare our residual plot to the null model
+tree_model_performance <- res_TREE %>% show_best(n=15)
+print(tree_model_performance)
+```
+
+*HOW DOES THIS MODEL PERFORM?*
+The single tree model with a depth of 15 performed the best with an RMSE of 19904, which is lower than the RMSE of the null model of 23678, this is good since it means that our performance for this model(single tree) was better than the null.
+
+
+*LASSO*
 Now we will construct a LASSO model
 ```{r}
 #We will once again start by constructing our model
@@ -289,6 +343,7 @@ lasso_topfit
 Now that we have found our top LASSO model, we will now plot it to show quality of fit
 ```{r}
 autoplot(lasso_tune_res)
+  ggsave(here::here("results", "LASSO.png"))
 ```
 ```{r}
 #we will now calculate the residuals
@@ -319,10 +374,9 @@ Finally we will compare our LASSO model to our null model
 ```{r}
 lasso_tune_res %>% show_best(n=1) #view RMSE for best lasso model
 ```
-Our LASSO model has a mean value of 21926.34, which is lower than the null model of 23678, but higher than our single tree model value of 20315. We will finally utilize the RandomForest model to compare quality of fit for our model.
+Our LASSO model has a mean value of 21926.34, which is lower than the null model of 23678, but higher than our single tree model value of 19904. We will finally utilize the RandomForest model to compare quality of fit for our model.
 
-
-# RANDOMFOREST
+*RANDOMFOREST*
 So far our single tree model has performed best, we will evaluate the random forest model and compare to determine if we should use the single tree or random forest instead
 *Please note that for Random Forest models, "num.threads" and importance*
 *is required or else all models will fail*
@@ -377,6 +431,7 @@ random_forest_resampling %>% show_best(metric = "rmse")
 We will now plot our models
 ```{r}
 autoplot(random_forest_resampling)
+  ggsave(here::here("results", "randomforest.png"))
 ```
 
 ```{r}
@@ -388,16 +443,78 @@ random_forest_best
 
 
 ```{r}
-#finalize workflow with top model
+#now we will finalize workflow with top model
 random_forest_final_workflow <- random_forest_workflow %>% finalize_workflow(random_forest_best)
 ```
 
 
 ```{r}
-#fit model with finalized WF
+#now we will fit the model with finalized WF
 random_forest_final_fit <- random_forest_final_workflow %>% fit(train_data)
 
 random_forest_final_fit
 ```
 
-Our random forest model's top model gives an RMSE of 20693, which is slightly worse than our single tree model of 20315, as such, we will use our single tree model to fit out test data
+Our random forest model's top model gives an RMSE of 20693, which is slightly worse than our single tree model of 19904, as such, we will use our single tree model to fit our test data
+
+*Final Fitting*
+We will finally fit out best performing model (single tree) to our test data to determine quality of fit
+```{r}
+last_single_tree_fit <- single_tree_workflow_FINAL %>% last_fit(data_split)
+last_single_tree_fit %>% collect_metrics()
+```
+Our final fitting of our model gave an RMSE of 23820, which is much higher than the earlier RMSE of 19904. This signals that there is overfitting present in the data
+
+Let's examine the importance of our variables
+```{r}
+importance_of_variables <- last_single_tree_fit %>% pluck(".workflow", 1) %>%   
+extract_fit_parsnip() %>% vip(num_features = 6)
+
+importance_of_variables
+
+ggsave(importance_of_variables, filename = here("results", "ImportanceOfVariables.png"))
+```
+
+The most important variables for our model appear to be being non-Hispanic, and being of White race, with all cancer sites combined being responsible for the third highest importance variable
+
+Finally we will repeat our steps as previously done to plot the final fitted model
+```{r}
+autoplot(res_TREE)
+```
+
+```{r}
+#Residuals
+final_single_tree_residuals<- last_single_tree_fit %>%
+  augment() %>% 
+  select(.pred, Deaths) %>%
+  mutate(.resid = Deaths - .pred)
+```
+
+```{r}
+#Tuned VS. Actual model predictions
+final_single_tree_plot <- ggplot(final_single_tree_residuals, aes(x = Deaths, y = .pred)) + geom_point() + 
+  labs(title = "Single Tree Outcome/Predictions", x = "Outcome", y = "Prediction") + ylim(0, 250) + xlim(0,250)
+
+final_single_tree_plot
+
+ggsave(final_single_tree_plot, filename = here("results", "FinalSingleTreePlot.png"))
+```
+
+
+```{r}
+#residuals vs predictions
+final_single_tree_residuals_plot <- ggplot(final_single_tree_residuals, aes(x = .pred, y = .resid)) + geom_point() + 
+  labs(title = "Single Tree Predictions/Residuals", x = "Predictions", y = "Residuals")
+         
+final_single_tree_residuals_plot 
+```
+
+
+
+We will finally compare our null model to our best performing model(single tree in this case)
+```{r}
+null_recipe_metrics 
+last_single_tree_fit %>% collect_metrics() #view RMSE for best lasso model
+```
+
+When comparing the two models, the single tree model performs worse than the null (23820 vs. 23678), this infers that the single tree model is not a good fit of our data, likely due to issues with over fitting.
