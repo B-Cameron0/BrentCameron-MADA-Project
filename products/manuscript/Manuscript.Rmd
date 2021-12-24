@@ -27,9 +27,9 @@ With an increasingly aging worldwide population, Cancer and its disease burden h
 
 ## General Background Information
 
-The word cancer has long been one of the most recognizable and fear-inducing words worldwide in the sphere of chronic disease. Cancer, along with heart disease and diabetes, are responsible for the leading causes of death and disability in the United States. In 2012, there were an estimated 14.1 million new cancer cases with 8.2 million cancer deaths worldwide[@Torre2016]. Cancer also affects the elderly at a hightened rate,being the fourth highest cause of death for the very old,with people aged 85 and older making up 6% of total cancer cases[@Hashim2020]. Additionally, cancer disproportionately affects some racial and ethnic groups more than others, with Black patients being more likely to have metastatic disease at diagnosis as well as (along with the Hispanic population) being less likely to receive medical treatment[@Zhang2020]. 
+The word cancer has long been one of the most recognizable and fear-inducing words worldwide in the sphere of chronic disease. Cancer, along with heart disease and diabetes, are responsible for the leading causes of death and disability in the United States. In 2012, there were an estimated 14.1 million new cancer cases with 8.2 million cancer deaths worldwide [@Torre2016]. Cancer also affects the elderly at a hightened rate,being the fourth highest cause of death for the very old,with people aged 85 and older making up 6% of total cancer cases [@Hashim2020]. Additionally, cancer disproportionately affects some racial and ethnic groups more than others, with Black patients being more likely to have metastatic disease at diagnosis as well as (along with the Hispanic population) being less likely to receive medical treatment [@Zhang2020]. 
 
-  This disproportional effect to some races can also have increased effects for certain types of cancer. For instance, according to research done by [@Schabath2016], lung cancer in particular has "racial and ethnic differences which in turn impacts the overall epidemiological differences..."   All is not depressing however, as [@Ozdemir2017] states that while there are some discrepancies in how cancer effects different groups (with under representation of the Black population in clinical trials being one example), the use of the patient navigation model (where an individual is trained to offer support for patients in trials), has made a positive impact in improving health care access.   
+  This disproportional effect to some races over others can be seen in a variety of different types of cancer. For instance, lung cancer has "racial and ethnic differences which in turn impacts the overall epidemiological differences..." [@Schabath2016]. All is not depressing however, as research states that while there are some discrepancies in how cancer effects different groups (with under representation of the Black population in clinical trials being one example), the use of the patient navigation model (where an individual is trained to offer support for patients in trials), has made a positive impact in improving health care access [@Ozdemir2017].
 
   Because of the vast scope and many different types of the disease, resources and networks have been continually strained in identifying the most efficient and effective ways to counteract cancerous cells. While a multitude of research has already been conducted on cancer, understanding the differences in how the disease continues to affect and interact with different populations can serve as an invaluable resource in tailoring new innovative strategies to combat the disease.
 
@@ -65,47 +65,78 @@ As previously stated, the data for this research project was retrieved from the 
 The data had several features removed for sake of more pertinent analysis, as well as the number of observations decreased from 8809 to 8752 due to removal of all NA variables.
 
 ## Full analysis
-Race and Ethnicity were assessed to determine any statistical significance relating to Deaths (cancer deaths), utilizing a comparison between a null model and 1. Single Tree, 2. LASSO, and 3. Random Forest models. 
+Cancer death rates were assessed to determine any statistical significance relating to Race and Ethnicity, utilizing a comparison between a null model and 1. Single Tree, 2. LASSO, and 3. Random Forest models. 
 
-Since almost all of the data used in this project was categorical, the  "classification" instead of "regression" method was adopted to ensure easier analysis of variables. Five fold cross-validation was used to ensure accurate results. R version 4.1.1 was used for the project.
+All variables except for the Deaths (cancer) variable were categorical. Deaths (cancer) was the main measurable outcome, while Race and Ethnicity served as the two main predictor variables. Five fold cross-validation was used to ensure accurate results. R version 4.1.1 was used for the project.
 
 # Results
-Results were inconclusive, all three model types experiences complete failure of generated models, thus there was no apparent significance between race, ethnicity, and cancer deaths. 
+Results were inconclusive, although the best performing model (single tree model) initially performed better than the null with an RMSE of 19904, which was below the null model RMSE of 23678, fitting with additional data provided a worse RMSE of 23820, leading to the conclusion that overfitting was present in the model. The LASSO model performed with an RMSE of 21926 and the random forest model performed with an RMSE of 20693, neither of which were adequate for accurate future fitting.
 
-Some information was gathered however, regarding basic exploratory analysis of the gathered data relating to age, race, cancer site, and sex, which are displayed here:
+The variables "Non-Hispanic" in Ethnicity, "White" in Race, and "All_Cancer_Sites_Combined" in Cancer Sites were the three variables with the largest measured value of importance in the model. Due to issues with overfitting in the model, it is possible that these variables are also responsible for the problems with overfitting.
 
-```{r AgeGroup,  fig.cap='\\label{fig::distribution}Cancer Deaths by Age Group', echo=FALSE}
-knitr::include_graphics("../../results/Cancer_Deaths_by_Age_Group.png")
+The single tree, LASSO, and random forest model plot results have been reported below, along with a summary of the most important variables:
+
+
+```{r SingleTreePlot,  fig.cap='\\label{fig::distribution}Single Tree Plot', echo=FALSE}
+knitr::include_graphics("../../results/singletree.png")
 ```
+
+
+
+
+
+```{r LASSO,  fig.cap='\\label{fig::distribution}LASSO Model Results', echo=FALSE}
+knitr::include_graphics("../../results/LASSO.png")
+```
+
+
+```{r randomforest,  fig.cap='\\label{fig::distribution}Random Forest Model Results', echo=FALSE}
+knitr::include_graphics("../../results/randomforest.png")
+```
+
+```{r VariableImportance,  fig.cap='\\label{fig::distribution}Variable Importance', echo=FALSE}
+knitr::include_graphics("../../results/ImportanceOfVariables.png")
+```
+
+
+### Discussion
+While the modeling overfit and was thus inconclusive that race and ethnicity play a role in cancer rates and death, the exploratory analysis and modeling suggests that there is a much higher prevalence of overall cancer death in the White population group, with the African American population group experiencing the second highest rates of cancer death overall. 
 
 
 ```{r Race,  fig.cap='\\label{fig::distribution}Cancer Deaths by Race', echo=FALSE}
 knitr::include_graphics("../../results/Cancer_Deaths_By_Race.png")
 ```
 
+In terms of most common age group, age appears to have a direct link with an increased risk of developing cancer. In terms of sex, men appear to have more overall cases of cancer death than females.
 
-```{r Site,  fig.cap='\\label{fig::distribution}Cancer Deaths by Site', echo=FALSE}
-knitr::include_graphics("../../results/Cancer_Deaths_by_Site.png")
+```{r Age,  fig.cap='\\label{fig::distribution}Cancer Deaths by Age Group', echo=FALSE}
+knitr::include_graphics("../../results/Cancer_Deaths_by_Age_Group.png")
 ```
+
 
 ```{r Sex,  fig.cap='\\label{fig::distribution}Cancer Deaths by Sex', echo=FALSE}
 knitr::include_graphics("../../results/Cancer_Deaths_by_Sex.png")
 ```
-## Discussion
-While the modeling was inconclusive that race and ethnicity play a role in cancer rates and death, the exploratory analysis indicates that there is a much higher prevalence of overall cancer death in the White population group, with the African American experiencing the second most overall. 
 
-In terms of most common age group, age appears to have a direct link with an increased risk of developing cancer. In terms of sex, men appear to have more overall cases of cancer death than females.
+Finally, when examining overall cancer sites, lung and bronchus folowed by the respiratory system were the two most common locations overall for developing cancer, with the digestive system being the third highest.
 
-Finally, when examining overall cancer sites, lung and bronchus folowed by the respiratory system were the two most common locations overall to develop cancer, with the digestive system being the third highest.
+```{r Site,  fig.cap='\\label{fig::distribution}Cancer Deaths by Site', echo=FALSE}
+knitr::include_graphics("../../results/Cancer_Deaths_By_Site.png")
+```
+
 
 ## Summary and Interpretation
-Overall, while no models were conclusive as to establishing a causal link between race, ethnicity, and cancer rates and deaths, there appears to be a distinct difference in overall disease burden between race groups, age groups, sex, and location, more research on race and ethnicity and how it relates to the burden of disease of certain population group should be pursued further to determine if a causal link exists.
+Overall, while no models were conclusive as to establishing a causal link between race, ethnicity, and cancer rates and deaths, there appears to be a distinct difference in overall disease burden between those of varying race, age groups, sex, and the location of where cancer appears. More research on race and ethnicity and how it relates to the burden of disease of certain population group should be pursued further to determine if any causal link exists.
+
+In addition, care must be made to ensure an accurate portrayal of overall disease burden on various population groups is conducted. For instance, although there appears to be a much higher cancer disease burden in the White population, there may be a large difference in the reported numbers of cases due to differences in the majority population throughout the United States as opposed to the average global population racial and ethnic composition.
 
 ## Strengths and Limitations
-Strengths of the analysis are that the data comes from the Center for Disease Control, which enables the retrieval and usage of accurate and highly valuable public health data. Additionally, by focusing on "classification" rather than "linear regression" in determining statistical significance, there exists potential to identify causality and statistical significance between categorical factors rather than the usual numerical.
+Strengths of the analysis are that the data comes from the Center for Disease Control, which enables the retrieval and usage of accurate and highly valuable public health data. Additionally, by focusing on the United States population in particular, possible trends relating to cancer death in the nationwide population can be examined and studied which may be hidden under a global lens. This unfortunately acts also as a limitation, in that the lack of data retrieved globally limits the overseas implication of any research results that can be extrapolated from the research project. 
+
+In addition, by relying on data already collected by the CDC rather than independently collecting data, there exists a possibility of certain population groups (for instance, those in rural areas) to be under represented overall.
 
 ## Conclusions
-In conclusion, ethnicity and race, while no clear evidence was proven in this case, appear to both have a tangible and measurable impact on the disease burden of a community, either directly through cultural stigma and institutionalized norms, or indirectly through averages of socioeconomic status and community networks, more research needs to be done to conclusively determine the presence of and extent of this potential relationship, or if the two features are simply confounders to another greater driver.
+In conclusion, while no clear evidence was proven in the modeling conducted in this project towards the relationship between race and ethnicity on cancer deaths, exploratory analysis indicates that both appear to have a tangible and measurable impact on the disease burden of a community, either directly through cultural stigma and institutionalized norms, or indirectly through socioeconomic status, family cohesion, and community networks. More research needs to be done to conclusively determine the presence of and extent of this potential relationship in the United States, or if the two predictors are simply confounders to another greater driver.
 
 
 # References
