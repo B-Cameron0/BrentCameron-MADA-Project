@@ -319,70 +319,85 @@ Finally we will compare our LASSO model to our null model
 ```{r}
 lasso_tune_res %>% show_best(n=1) #view RMSE for best lasso model
 ```
-Our LASSO model has a mean value of 22121.36, which is lower than the null model of 23678, but higher than our single tree model value of 20315. We will finally utilize the RandomForest model to check for quality of fit for our model.
+Our LASSO model has a mean value of 21926.34, which is lower than the null model of 23678, but higher than our single tree model value of 20315. We will finally utilize the RandomForest model to compare quality of fit for our model.
 
 
 # RANDOMFOREST
-So far our single tree model has performed best, we will evaluate the random forest model lat
-  
+So far our single tree model has performed best, we will evaluate the random forest model and compare to determine if we should use the single tree or random forest instead
 *Please note that for Random Forest models, "num.threads" and importance*
 *is required or else all models will fail*
-```{r}
-randomforest_model <- rand_forest() %>%
-  set_args(mtry = tune(),
-  trees = tune(), 
-  min_n = tune()
-  ) %>%
-  #Now we set the engine
-  set_engine("ranger", 
-             num.threads = 5,
-             importance = "permutation") %>%
-  #We select either the continuous or binary classification
-  set_mode("classification")
 
-#We will set our workflow once again
-randomforest_workflow <- workflow() %>% 
-  add_model(randomforest_model) %>%
+First we will identify how many cores we can use at one time during parallel processing
+```{r}
+cores <- parallel::detectCores()
+cores
+```
+
+We have four cores available for parallel processing, we will use the command "cores" in number of threads to use the max number possible (in our case four)
+```{r}
+random_forest_model <- 
+  rand_forest(mtry = tune(), min_n = tune(), trees = tune()) %>% 
+  set_engine("ranger", num.threads = cores) %>% 
+  set_mode("regression")
+```
+
+We will now set our workflow
+```{r}
+random_forest_workflow <- 
+  workflow() %>% 
+  add_model(random_forest_model) %>% 
   add_recipe(recipe_Deaths)
-
-#We will now repeat our steps as the first two models to specify our tuning grid
-#We will use parallel computing once again to vastly decrease the time it takes 
-#to compute the model- since we have already use code previously to create it
-#we now only need to use our name designation for our cluster and it will resume
-cluster <-makePSOCKcluster(5)
-registerDoParallel(5)
-
-#Now we will tune the grid
-randomforest_grid <- expand.grid(mtry = c(3, 4, 5, 6), min_n = c(40, 50, 60),
-                                 trees = c(500, 1000))
-
 ```
-    
 
-We will set our workflow once again
+We will now create our tuning grid for our random forest model
 ```{r}
-  randomforest_workflow <- workflow() %>% 
-    add_model(randomforest_model) %>%
-    add_recipe(recipe_Deaths)
-```
-  
-We will now repeat our steps as the first two models to specify our tuning grid
-We will use parallel computing once again to vastly decrease the time it takes 
-to compute the model- since we have already used code previously to create it
-we now only need to use our name designation for our cluster and it will resume
-```{r}
-  cluster <-makePSOCKcluster(5)
-  registerDoParallel(5)
-```
-  
-We will now tune the model while optimizing RMSE
-```{r}
- randomforest_tune_res <- randomforest_workflow %>%
-    tune_grid(resamples = Cross_Validation_5F, 
-              #This is the name of our previous CV object
-              grid = randomforest_grid)
-#This is the grid of values we want to try
-             
+random_forest_grid  <- expand.grid(mtry = c(3, 4, 5, 6), min_n = c(40,50,60), trees = c(500,1000)  )
 ```
 
-  Unfortunately, all of the models failed to have a necessary level of significance. There may be issues with conflicitng variables, or Race and Ethnicity simply does not have a significant effect on overall cancer deaths.
+Let's examine what we are tuning
+```{r}
+random_forest_model %>% parameters()
+```
+
+Now we will tune with our grid that we created
+```{r}
+random_forest_resampling <- 
+  random_forest_workflow %>%
+  tune_grid(resamples = Cross_Validation_5F, 
+            grid = random_forest_grid, 
+            control = control_grid(save_pred = TRUE), 
+            metrics = metric_set(rmse))
+```
+
+We will now view our top models
+```{r}
+random_forest_resampling %>% show_best(metric = "rmse")
+```
+
+We will now plot our models
+```{r}
+autoplot(random_forest_resampling)
+```
+
+```{r}
+#we will now select the best performing model
+random_forest_best <- random_forest_resampling %>% select_best(metric = "rmse")
+
+random_forest_best
+```
+
+
+```{r}
+#finalize workflow with top model
+random_forest_final_workflow <- random_forest_workflow %>% finalize_workflow(random_forest_best)
+```
+
+
+```{r}
+#fit model with finalized WF
+random_forest_final_fit <- random_forest_final_workflow %>% fit(train_data)
+
+random_forest_final_fit
+```
+
+Our random forest model's top model gives an RMSE of 20693, which is slightly worse than our single tree model of 20315, as such, we will use our single tree model to fit out test data
