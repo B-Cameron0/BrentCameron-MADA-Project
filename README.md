@@ -1,4 +1,6 @@
 # Hello! Welcome to my project for Dr. Handel's Modern Applied Data Analysis Class
+This project deals with evaluating the significance of several different factors such 
+as Race and Ethnicity in the examination of United States cancer mortality rates from 1999-2017
 
 # Original Data
 You can view the original data used for this project in the "raw_data" sub-folder,
@@ -25,5 +27,5 @@ sub-folder via the "code" folder (analysis modeling.Rmd)
 The manuscript, which compiles all of the project into an easy to read format,
 can be found in the "products" folder via the "manuscipt" sub-folder 
 
-#References
+# References
 References can be found in the "manuscript" sub-folder via the "products" folder.
